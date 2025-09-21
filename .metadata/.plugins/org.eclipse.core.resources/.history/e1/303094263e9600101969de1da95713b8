@@ -1,0 +1,97 @@
+package com.springboot.scm.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import com.springboot.scm.impl.SecurityCostomUserDetailService;
+
+@Configuration
+public class SecurityConfig {
+	
+	@Autowired
+	private SecurityCostomUserDetailService userDetailService;
+
+    @Bean
+    AuthenticationProvider authenticationProvider() {
+		
+		DaoAuthenticationProvider daoAuthenticationProvider=new DaoAuthenticationProvider();
+		daoAuthenticationProvider.setUserDetailsService(userDetailService);
+		daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+		
+		return daoAuthenticationProvider;
+		
+	}
+    
+    //url configuration wich one is private and which is public 
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    	
+    	httpSecurity.authorizeHttpRequests(authorize->{
+    		authorize.requestMatchers("/user/**").authenticated();
+    		authorize.anyRequest().permitAll();
+    		
+    	});
+    	//form default login 
+    	//form login se related kux bhi change karna ho to ham yaha ayenge
+    	
+    	httpSecurity.formLogin(formLogin->{
+    		formLogin.loginPage("/login");
+    		formLogin.loginProcessingUrl("/authenticate");
+    		formLogin.successForwardUrl("/user/dashboard");
+//    		formLogin.failureForwardUrl("/login?error=true");
+//    		formLogin.defaultSuccessUrl("/login");
+    		formLogin.usernameParameter("email");
+    		formLogin.passwordParameter("password");
+    		
+//    		formLogin.failureHandler(new AuthenticationFailureHandler() {
+//
+//				@Override
+//				public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+//						AuthenticationException exception) throws IOException, ServletException {
+//					// TODO Auto-generated method stub
+//					
+//				}
+//    			
+//    		});
+//    		
+//    		formLogin.successHandler(new AuthenticationSuccessHandler() {
+//
+//				@Override
+//				public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+//						Authentication authentication) throws IOException, ServletException {
+//					// TODO Auto-generated method stub
+//					
+//				}
+//    			
+//    		});
+    		
+    	});
+    	
+    	httpSecurity.csrf(AbstractHttpConfigurer::disable);
+    	httpSecurity.logout(formLogout->{
+    		
+    		formLogout.logoutUrl("/do-logout");
+//    		formLogout.logoutSuccessUrl("/home");
+    		formLogout.logoutSuccessUrl("/login?logout=true");
+    		
+    		
+    	});
+    	
+		return httpSecurity.build();
+    	
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+		
+		return new BCryptPasswordEncoder();
+	}
+
+}

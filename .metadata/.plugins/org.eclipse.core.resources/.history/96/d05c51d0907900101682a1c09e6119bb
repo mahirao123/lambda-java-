@@ -1,0 +1,6 @@
+package com.springboot.rbl.services;
+
+public class RblAuthService {
+	
+
+}

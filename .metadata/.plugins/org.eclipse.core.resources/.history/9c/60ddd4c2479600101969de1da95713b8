@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html 
+data-th-replace="~{base :: parent(~{:: #content},~{::title})}"
+lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+
+</head>
+<body >
+
+  <div id="content">
+    <div class="grid grid-cols-12 mt-4">
+
+      <div class="col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4"></div>
+      <div class="col-span-10 md:col-span-8 lg:col-span-6 xl:col-span-4 border-t-8 border-green-700 rounded-2xl bg-white">
+      <h2 class="text-3xl font-bold mb-6 text-center text-gray-700">Login</h2>
+	<div data-th-replace="message::messagebox"></div>
+
+	<div class="text-red-600 text-center my-3" data-th-if="${param.error}">
+		Invalid Username or Password!
+	</div>
+
+		<div class="text-green-600 text-center my-3" data-th-if="${param.logout}">
+		Logout Successful!
+	</div>
+
+    <form 
+	method="post"
+	data-th-action="@{/authenticate}"
+	
+	class="space-y-5" >
+
+      <!-- Email -->
+      <div>
+        <label for="email" class="block mb-2 text-sm font-medium text-gray-700">Email Address</label>
+        <input type="email" id="email" name="email"
+          placeholder="example@firm.com"
+          
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+
+		    <!-- <p 
+		    data-th-if="${#fields.hasErrors('email')}"
+		    data-th-errors="*{email}"
+		    class="text-red-600 px-1 py-2"
+		    >
+		  </p> -->
+
+		  </div>
+
+      <!-- Password -->
+      <div>
+        <label for="password" class="block mb-2 text-sm font-medium text-gray-700">Password</label>
+        <input type="password" id="password" name="password"
+          placeholder="Create a password"
+          
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+
+		    <!-- <p 
+		    data-th-if="${#fields.hasErrors('password')}"
+		    data-th-errors="*{password}"
+		    class="text-red-600 px-1 py-2"
+		    >
+		  </p> -->
+
+		  </div>
+
+      <!-- Submit Button -->
+      <div class="flex justify-center space-x-2">
+        <button type="submit"
+          class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          Login
+        </button>
+
+          <button type="reset"
+          class="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          Reset
+        </button>
+
+      </div>
+    </form>
+
+<button class="btn-165">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 262">
+        <path fill="#4285F4" d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"></path>
+        <path fill="#34A853" d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1"></path>
+        <path fill="#FBBC05" d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782"></path>
+        <path fill="#EB4335" d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"></path>
+    </svg>
+    <span>    <a 
+	class="px-3 py-2"
+	data-th-href="@{'/oauth2/authorization/google'}">Login with google</a></span>
+</button>
+
+
+	<!-- <div class=" social-buttons-container flex justify-center my-10">
+    <a 
+	class="px-3 py-2"
+	data-th-href="@{'/oauth2/authorization/google'}">Login with google</a>
+
+	</div> -->
+	
+      </div>
+    </div>
+    
+  </div>
+
+  
+</body>
+</html>

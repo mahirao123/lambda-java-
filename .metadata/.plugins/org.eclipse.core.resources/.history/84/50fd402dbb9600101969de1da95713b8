@@ -1,0 +1,5 @@
+package com.springboot.scm.config;
+
+public class OAuthAthenticationSuccessHandler {
+
+}
