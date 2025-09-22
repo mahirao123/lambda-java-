@@ -22,7 +22,7 @@ public class SecurityConfig {
 	@Autowired
 	private OAuthAthenticationSuccessHandler handler;
 	
-	
+	// Self login form related configuration
     @Bean
     AuthenticationProvider authenticationProvider() {
 		
