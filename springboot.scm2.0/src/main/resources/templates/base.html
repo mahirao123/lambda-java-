@@ -15,12 +15,29 @@
 <body class="bg-gray-100"> 
 
     <!-- Navbar -->
-    <div th:replace="~{navbar :: navbar}"></div>
 
+    <!-- it will show when user loggedin -->
+    <div th:if="${loggedInUser}">
+        <div th:replace="~{user/user_loggedIn :: user_navbar}">        
+        </div>
+    </div>
+
+    
+    <!-- it will show when user not loggedin -->
+   <div th:unless="${loggedInUser}">
+        <div th:replace="~{navbar :: navbar}">
+        </div>
+    </div>
+	
     <!-- Page content -->
-    <main class="pt-[80px]">
-        <section th:replace="${content}"></section>
-    </main>
+	
+		<main class="pt-[80px] ">
+		    <section th:replace="${content}"></section>
+		</main>
+
+
+	
+
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
 </body>
 

@@ -57,6 +57,12 @@ public class UserServiceImpl implements UserService {
 		
 		return userRepo.findById(id);
 	}
+	
+	@Override
+	public User getUserByEmail(String email) {
+		// TODO Auto-generated method stub
+		return userRepo.findByEmail(email).orElseThrow(null);
+	}
 
 	@Override
 	public Optional<User> updateUser(User user) {
@@ -113,6 +119,8 @@ public class UserServiceImpl implements UserService {
 
 		return userRepo.findAll();
 	}
+
+
 	
 	
 

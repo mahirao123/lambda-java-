@@ -1,11 +1,29 @@
 package com.springboot.scm.controller;
 
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.springboot.scm.entitis.User;
+import com.springboot.scm.helpers.Helper;
+import com.springboot.scm.repositories.UserRepo;
+import com.springboot.scm.services.UserService;
+
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
+	
+	private Logger logger= LoggerFactory.getLogger(UserController.class);
+	
+
 	
 	@RequestMapping(value="/dashboard")
 	public String userDashboard() {
@@ -21,6 +39,9 @@ public class UserController {
 	
 	@RequestMapping(value="/profile")
 	public String userProfile() {
+		
+		
+		
 		//add contact page
 		//view contact page
 		//user edit contact

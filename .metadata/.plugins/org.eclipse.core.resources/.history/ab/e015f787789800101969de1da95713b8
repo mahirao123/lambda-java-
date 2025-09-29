@@ -1,0 +1,58 @@
+package com.springboot.scm.helpers;
+
+import java.security.Principal;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+
+public class Helper {
+	
+	public static String getEmailLoggedInUser(Authentication authentication) {
+		
+	// ager email aur password se login kiye h to email kaise nikalenge
+		
+		 Principal principal = (Principal) authentication.getPrincipal();
+		
+		
+		if(principal instanceof OAuth2AuthenticatedPrincipal) {
+			
+			var oAuth2AuthenticationToken =  (OAuth2AuthenticationToken) authentication;
+			String clientId= oAuth2AuthenticationToken.getAuthorizedClientRegistrationId();
+			
+			System.out.println("clientId "+clientId);
+			
+			// google login
+			if(clientId.equalsIgnoreCase("google")){
+				
+				System.out.println("Login from google");
+				
+			}
+			
+			//gitHub login
+			else if(clientId.equalsIgnoreCase("github")) {
+				
+				System.out.println("Login from github");
+				
+				
+			}
+			
+		}
+		
+		
+		
+
+		
+		//other if any
+		
+		
+		else {
+			return principal.getName();
+		}
+		
+		return null;
+		
+	}
+
+}

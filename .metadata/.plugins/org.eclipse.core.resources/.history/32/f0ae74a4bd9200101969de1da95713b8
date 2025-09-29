@@ -1,5 +1,0 @@
-package com.springboot.scm.helpers;
-
-public class SessionHelper {
-
-}
