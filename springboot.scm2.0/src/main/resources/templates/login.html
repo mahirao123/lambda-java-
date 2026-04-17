@@ -16,7 +16,7 @@ lang="en">
       <div class="col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4"></div>
       <div class="col-span-10 md:col-span-8 lg:col-span-6 xl:col-span-4 border-t-8 border-green-700 rounded-2xl bg-white">
       <h2 class="text-3xl font-bold mb-6 text-center text-gray-700">Login</h2>
-	<div data-th-replace="message::messagebox"></div>
+	<div data-th-replace="~{message::messagebox}"></div>
 
 	<div class="text-red-600 text-center my-3" data-th-if="${param.error}">
 		Invalid Username or Password!
