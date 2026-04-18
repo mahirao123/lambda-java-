@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-th-replace="~{base :: parent(~{:: #content},~{::title})}" lang="en">
+<html data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}" lang="en">
 
 <head>
 	<meta charset="UTF-8">
@@ -134,11 +134,17 @@
 									</td>
 									<td class="px-6 py-4">
 										<div>
-											<a data-th-href="@{$S{websitLink}}" target="_blank"><i
-													class="w-6 h-6 fa-solid fa-delete-left"></i></a>
-											<a data-th-href="@{$S{websitLink}}" target="_blank"><i
+											<!-- <a data-th-href="@{'/user/contacts/delete/'+*{id}}">
+												<i class="w-6 h-6 fa-solid fa-delete-left"></i>
+											</a> -->
+
+											<button th:onclick="deleteContact([[${c.id}]])">
+												<i class="w-6 h-6 fa-solid fa-delete-left"></i>
+											</button>
+											
+											<a data-th-href="@{$S{websitLink}}"><i
 													class="w-6 h-6 fa-solid fa-pen"></i></a>
-											<a data-th-href="@{$S{websitLink}}" target="_blank"><i
+											<a data-th-href="@{$S{websitLink}}"><i
 													class="w-6 h-6 fa-solid fa-eye"></i></a>
 
 
