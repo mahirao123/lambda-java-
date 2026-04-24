@@ -1,10 +1,56 @@
-// contact delete function
+const baseUrl = "http://localhost:8081";
 
-const baseUrl="http://localhost:8081"
+function viewContact(btn) {
+
+    const id = btn.dataset.id;
+    const name = btn.dataset.name;
+    const email = btn.dataset.email;
+    const phone = btn.dataset.phone;
+    const image = btn.dataset.image;
+
+    // ✅ Correct dataset names (must match HTML)
+    const linkedInLink = btn.dataset.linkedin;
+    const websiteLink = btn.dataset.website;
+    const favorite = btn.dataset.favorite;
+
+    // ✅ Fill modal
+
+    document.getElementById("vImage").src = image;
+    document.getElementById("vName").innerText = name;
+    document.getElementById("vEmail").innerText = email;
+    document.getElementById("vPhone").innerText = phone;
+
+    // ✅ Fix links
+    const linkedinEl = document.getElementById("vLinkedInLink");
+
+    linkedinEl.innerText = linkedInLink;
+
+    const websiteEl = document.getElementById("vWebsiteLink");
+
+    websiteEl.innerText = websiteLink;
+
+    // ✅ Fix favorite (string → boolean)
+    const favEl = document.getElementById("vFavorite");
+
+    if (favorite === "true") {
+        favEl.innerHTML = "⭐ ⭐ ⭐ ⭐ ⭐";
+    } else {
+        favEl.innerHTML = "";
+    }
+
+    // ✅ Show modal
+    document.getElementById("viewContactModal").classList.remove("hidden");
+}
+
+// Close modal
+function closeViewModal() {
+    document.getElementById("viewContactModal").classList.add("hidden");
+}
+
 async function deleteContact(id){
 	Swal.fire({
 	icon:"warning",	
-	  title: "Do you want to delete the contact?",
+	  title: "Do you want to delete this contact?",
 	  showCancelButton: true,
 	  confirmButtonText: "Delete",
 	}).then((result) => {

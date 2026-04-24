@@ -30,6 +30,7 @@
 					<div
 						class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
 						
+						<div data-th-replace="~{message :: messagebox}"></div>
 						
 						<form 
 						data-th-object="${contactSearchForm}"
@@ -125,11 +126,21 @@
 										<div class="flex items-center ">
 											<div data-th-if="*{favorite}"
 												class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
+												<!-- Website -->
+												<a 
+												   th:if="${c.websiteLink != null and !#strings.isEmpty(c.websiteLink)}"
+												   th:href="${c.websiteLink}" 
+												   target="_blank">
+												   <i class="fa-solid fa-link h-5 w-5 mr-2"></i>
+												</a>
 
-											<a data-th-href="@{$S{websitLink}}" target="_blank"><i
-													class="fa-solid fa-link h-5 w-5 mr-2"></i></a>
-											<a data-th-href="@{${linkedInLink}}" target="_blank"><i
-													class="fa-brands fa-linkedin h-5 w-5"></i></a>
+												<!-- LinkedIn -->
+												<a 
+												   th:if="${c.linkedInLink != null and !#strings.isEmpty(c.linkedInLink)}"
+												   th:href="${c.linkedInLink}" 
+												   target="_blank">
+												   <i class="fa-brands fa-linkedin h-5 w-5"></i>
+												</a>
 										</div>
 									</td>
 									<td class="px-6 py-4">
@@ -138,16 +149,38 @@
 												<i class="w-6 h-6 fa-solid fa-delete-left"></i>
 											</a> -->
 
-											<button th:onclick="deleteContact([[${c.id}]])">
+										<!-- delete contact button -->
+											<button th:onclick="deleteContact([[${c.id}]])"
+											class="bg-red-500 text-white px-2 py-1 rounded cursor-pointer"
+											>
 												<i class="w-6 h-6 fa-solid fa-delete-left"></i>
 											</button>
-											
-											<a data-th-href="@{$S{websitLink}}"><i
-													class="w-6 h-6 fa-solid fa-pen"></i></a>
-											<a data-th-href="@{$S{websitLink}}"><i
-													class="w-6 h-6 fa-solid fa-eye"></i></a>
 
+											<!-- Update Contact button -->
+											<a data-th-href="@{'/user/contacts/update_contact/'+*{id}}"
+											class="bg-green-500 text-white px-2 py-1 rounded pb-3"
+											><i
+													class="w-6 h- fa-solid fa-pen "></i></a>
 
+												<!-- View Contact button -->
+										<!--	<a data-th-href="@{'/user/contacts/view_contact/'+*{id}}">
+												<i	class="w-6 h-6 fa-solid fa-eye"></i></a>	-->	
+																																				
+												<button th:onclick="viewContact(this)"
+
+												th:data-id="${c.id}"
+												th:data-name="${c.name}"
+												th:data-email="${c.email}"
+												th:data-phone="${c.phoneNumber}"
+												th:data-image="${c.picture != null ? c.picture : '/images/raj.jpeg'}"
+												th:data-linkedin="${c.linkedInLink}"
+												th:data-website="${c.websiteLink}"
+												th:data-favorite="${c.favorite}"
+												class="bg-blue-500 text-white px-2 py-1 rounded"
+												>
+												
+													<i	class="w-6 h-6 fa-solid fa-eye cursor-pointer"></i>
+												</button>
 
 										</div>
 									</td>
