@@ -40,8 +40,8 @@ public class RootController {
 		User user=userService.getUserByEmail(username);
 		
 		
-        System.out.println(user.getUsername());
-        System.out.println(user.getPassword());
+//        System.out.println(user.getUsername());
+//        System.out.println(user.getPassword());
         
         model.addAttribute("loggedInUser",user);
 		

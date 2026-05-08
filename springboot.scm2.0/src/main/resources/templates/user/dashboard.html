@@ -29,7 +29,77 @@ lang="en">
 		</div>
 
 		
-        <div class=" sm:pl-65 ">This is user Dashboard page</div>
+        <div class=" sm:pl-65 ">
+			
+			  <!-- Grid Layout -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+
+        <!-- Card -->
+        <div th:each="contact : ${pageContacts.getContent()}"
+             class="bg-white rounded-2xl shadow-md p-5 hover:shadow-xl transition">
+
+            <!-- Profile Image -->
+            <div class="flex justify-center">
+                <img th:src="@{${contact.picture}}"
+				onerror="this.src='/images/profile.png'"
+                     class="w-20 h-20 rounded-full border-2 border-blue-500 shadow">
+            </div>
+
+            <!-- Name -->
+            <h2 class="text-center text-lg font-semibold mt-3"
+                th:text="${contact.name}">Name</h2>
+
+            <!-- Email -->
+            <p class="text-center text-gray-500 text-sm"
+               th:text="${contact.email}">Email</p>
+
+            <!-- Info -->
+            <div class="mt-3 text-sm text-gray-700 space-y-1">
+                <p><strong>📞</strong> 
+                    <span th:text="${contact.phoneNumber}"></span>
+                </p>
+                <p><strong>📍</strong> 
+                    <span th:text="${contact.address}"></span>
+                </p>
+            </div>
+
+            <!-- Favorite Links -->
+            <div class="mt-3">
+                <p class="font-semibold text-sm mb-1">Links:</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-between mt-4">
+
+                <a href="#"
+                   class="text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-lg text-sm">
+                    View
+                </a>
+
+                <a href="#"
+                   class="text-white bg-green-600 hover:bg-green-700 px-3 py-1 rounded-lg text-sm">
+                    Edit
+                </a>
+
+                <a href="#"
+                   class="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg text-sm">
+                    Delete
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ❗ No Data Case -->
+    <div th:if="${pageContacts.content.size() == 0}"
+         class="text-center text-gray-500 mt-10">
+        No contacts found.
+    </div>
+
+			
+		</div>
 </div>
 </body>
 </html>
