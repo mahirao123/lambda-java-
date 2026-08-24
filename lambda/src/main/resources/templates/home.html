@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}" lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Home Page</title>
+
+</head>
+
+<body>
+
+	<div id="content">
+
+		<div th:replace="~{navbar :: navbar}">
+		</div>
+
+
+		<!---   Main Slider Fragment -->
+		<div th:replace="~{fragments/mainSlider :: videoAndImageSlider}"></div>
+		
+		<!---    Sliding Text Fragment -->
+		<div th:replace="~{fragments/viewSlidingText :: slidingText}"></div>
+		
+
+		<!---   All SocialMedia Videos Link -->
+
+		<div class="max-w-8.5xl mx-auto px-4 py-4">
+
+			<h1 class="text-2xl font-bold text-center text-blue-700 mb-2 ">
+
+				<a class="hover:text-red-800 " data-th-href="@{'/public/moreVideos'}"> More Videos...</a>
+
+			</h1>
+
+			<!--- Long Youtube Videos -->
+			<div th:replace="~{fragments/youtubeLongVideos :: youtubeLongVideo}"></div>
+			
+
+			<!--- Long Youtube Videos -->
+
+			<div data-th-unless="${socialMediaPage.empty}"
+				class="pagination_container bg-white min-w-full py-2 text-center">
+				<nav aria-label="Page navigation example">
+					<ul class="inline-flex  text-sm">
+						<li data-th-unless="${socialMediaPage.first}">
+							<a data-th-href="@{'/home?size='+${pageSize}+'&page='+ ${socialMediaPage.number-1}}" class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border 
+									  border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-s-base text-sm px-3 h-9 
+									  focus:outline-none">Previous</a>
+						</li>
+						<li data-th-each="index : ${#numbers.sequence(0,socialMediaPage.totalPages-1)}">
+							<a data-th-href="@{'/home?size='+${pageSize}+'&page='+${index}}"
+								data-th-classappend="${index==socialMediaPage.number?'bg-blue-600':'bg-white-600'}"
+								class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border
+									    border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium text-sm w-9 h-9 
+										focus:outline-none" data-th-text="${index+1}">1</a>
+						</li>
+
+						<li data-th-unless="${socialMediaPage.isLast}">
+							<a data-th-href="@{'/home?size='+${pageSize}+'&page='+${socialMediaPage.number+1}}" class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border 
+									  border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-e-base text-sm px-3 h-9 
+									  focus:outline-none">Next</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+
+
+			<h1 class="text-center text-5xl bg-white p-4" data-th-if="${socialMediaPage.empty}">No result found</h1>
+
+
+		</div>
+
+
+
+		<!--- Other Slider for Advertisement -->
+		<div th:replace="~{fragments/otherSlider :: otherSlider}"></div>
+
+	</div>
+	<script>
+
+	</script>
+</body>
+
+</html>

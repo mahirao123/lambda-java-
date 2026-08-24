@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html
+data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}"
+lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title
+        data-th-text="${loggedInEmployee != null ? loggedInEmployee.name + ' | Podcast' : 'Podcast'}">
+        Podcast
+    </title>
+</head>
+
+<body class="bg-gray-200">
+
+    <div id="content" class="min-h-screen flex flex-col">
+
+
+        <!-- Main Content -->
+        <main
+            class="flex-1 px-4 sm:ml-64 transition-all duration-300">
+			
+			<div class="container mx-auto px-4 py-8">
+
+			    <div class="max-w-xl mx-auto">
+
+			        <div class="bg-white rounded-xl shadow-lg">
+
+			            <!-- Header -->
+			            <div class="border-b px-6 py-4">
+			                <h2 class="text-2xl font-bold text-gray-800">
+			                    Create Podcast
+			                </h2>
+			                <p class="text-gray-500 mt-1">
+			                    Fill the details .
+			                </p>
+			            </div>
+						<div data-th-replace="~{message::messagebox}"></div>
+			            <!-- Form -->
+
+						<form
+						    th:action="@{'/hr/podcast/update/'+${id}}"
+						    th:object="${podcastForm}"
+						    method="post"
+						    class="max-w-4xl mx-auto bg-white p-6 md:p-8 rounded-xl shadow-lg">
+
+						    <!-- =========================
+						         HOST + GUEST
+						    ========================== -->
+
+						    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+						        <!-- Host Name -->
+						        <div>
+						            <label
+						                for="hostName"
+						                class="block mb-2 text-sm font-medium text-gray-900">
+
+						                Host Name
+						            </label>
+
+						            <input
+						                type="text"
+						                id="hostName"
+						                th:field="*{hostName}"
+						                placeholder="Enter host name"
+						                required
+						                class="w-full px-4 py-3 border border-gray-300 rounded-lg
+						                       focus:ring-2 focus:ring-blue-500
+						                       focus:border-blue-500 outline-none">
+											   
+											   <p data-th-if="${#fields.hasErrors('hostName')}"
+		   									      data-th-errors="*{hostName}"
+		   									      class="mt-1 text-sm text-red-600">
+		   									   </p>
+
+						        </div>
+
+
+						        <!-- Guest Name -->
+						        <div>
+						            <label
+						                for="guestName"
+						                class="block mb-2 text-sm font-medium text-gray-900">
+
+						                Guest Name
+						            </label>
+
+						            <input
+						                type="text"
+						                id="guestName"
+						                th:field="*{guestName}"
+						                placeholder="Enter guest name"
+						                required
+						                class="w-full px-4 py-3 border border-gray-300 rounded-lg
+						                       focus:ring-2 focus:ring-blue-500
+						                       focus:border-blue-500 outline-none">
+											   
+											   <p data-th-if="${#fields.hasErrors('guestName')}"
+											   									      data-th-errors="*{guestName}"
+											   									      class="mt-1 text-sm text-red-600">
+											   									   </p>
+
+						        </div>
+
+						    </div>
+
+
+						    <!-- =========================
+						         DATE + TIME
+						    ========================== -->
+
+						    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+
+						        <!-- Date -->
+						        <div>
+
+						            <label
+						                for="date"
+						                class="block mb-2 text-sm font-medium text-gray-900">
+
+						                Podcast Date
+						            </label>
+
+						            <input
+						                type="date"
+						                id="date"
+						                th:field="*{date}"
+						                required
+						                class="w-full px-4 py-3 border border-gray-300 rounded-lg
+						                       focus:ring-2 focus:ring-blue-500
+						                       focus:border-blue-500 outline-none">
+											   
+											   <p data-th-if="${#fields.hasErrors('date')}"
+											      data-th-errors="*{date}"
+											      class="mt-1 text-sm text-red-600">
+											   </p>
+
+						        </div>
+
+
+						        <!-- Time -->
+						        <div>
+
+						            <label
+						                for="time"
+						                class="block mb-2 text-sm font-medium text-gray-900">
+
+						                Podcast Time
+						            </label>
+
+						            <input
+									<input
+									    type="time"
+									    id="time"
+									    name="time"
+									    th:value="${podcastForm.time != null ? #temporals.format(podcastForm.time, 'HH:mm') : ''}"
+									    required
+									    class="w-full px-4 py-3 border border-gray-300 rounded-lg
+									           focus:ring-2 focus:ring-blue-500
+									           focus:border-blue-500 outline-none">
+											   
+											   <p data-th-if="${#fields.hasErrors('time')}"
+											      data-th-errors="*{time}"
+											      class="mt-1 text-sm text-red-600">
+											   </p>
+
+						        </div>
+
+						    </div>
+
+
+						    <!-- =========================
+						         DURATION
+						    ========================== -->
+
+						    <div class="mt-6">
+
+						        <label
+						            for="duration"
+						            class="block mb-2 text-sm font-medium text-gray-900">
+
+						            Duration
+						        </label>
+
+						        <input
+						            type="text"
+						            id="duration"
+						            th:field="*{duration}"
+						            placeholder="Example: 45 minutes"
+						            required
+						            class="w-full px-4 py-3 border border-gray-300 rounded-lg
+						                   focus:ring-2 focus:ring-blue-500
+						                   focus:border-blue-500 outline-none">
+										   
+										   <p data-th-if="${#fields.hasErrors('duration')}"
+										   									      data-th-errors="*{duration}"
+										   									      class="mt-1 text-sm text-red-600">
+										   									   </p>
+
+						    </div>
+							
+
+							<!-- =========================
+							     REMARK
+							========================== -->
+							
+						    <div class="mt-6">
+
+						        <label
+						            for="duration"
+						            class="block mb-2 text-sm font-medium text-gray-900">
+
+						            Remark
+						        </label>
+
+						        <input
+						            type="text"
+						            id="duration"
+						            th:field="*{remark}"
+						            placeholder="Remark...."
+						            required
+						            class="w-full px-4 py-3 border border-gray-300 rounded-lg
+						                   focus:ring-2 focus:ring-blue-500
+						                   focus:border-blue-500 outline-none">
+										   
+										   <p data-th-if="${#fields.hasErrors('remark')}"
+										   									      data-th-errors="*{remark}"
+										   									      class="mt-1 text-sm text-red-600">
+										   									   </p> 
+
+						    </div>
+
+
+						    <!-- =========================
+						         PODCAST URL
+						    ========================== -->
+
+						    <div class="mt-6">
+
+						        <label
+						            for="podcastUrl"
+						            class="block mb-2 text-sm font-medium text-gray-900">
+
+						            Podcast URL
+						        </label>
+
+						        <input
+						            type="url"
+						            id="podcastUrl"
+						            th:field="*{podcastUrl}"
+						            placeholder="https://example.com/podcast"
+						            required
+						            class="w-full px-4 py-3 border border-gray-300 rounded-lg
+						                   focus:ring-2 focus:ring-blue-500
+						                   focus:border-blue-500 outline-none">
+										   
+										   <p data-th-if="${#fields.hasErrors('podcastUrl')}"
+										      data-th-errors="*{podcastUrl}"
+										      class="mt-1 text-sm text-red-600">
+										   </p>
+
+						    </div>
+
+
+						    <!-- =========================
+						         BUTTONS
+						    ========================== -->
+
+						    <div class="flex flex-col sm:flex-row gap-3 mt-8">
+
+						        <button
+						            type="submit"
+						            class="w-full sm:w-auto px-6 py-3
+						                   bg-blue-600 hover:bg-blue-700
+						                   text-white font-medium
+						                   rounded-lg transition
+										   cursor-pointer">
+										   	
+						            Update Podcast
+
+						        </button>
+
+
+						        <a
+						            th:href="@{/hr/podcast/view}"
+						            class="w-full sm:w-auto px-6 py-3
+						                   bg-gray-200 hover:bg-gray-300
+						                   text-gray-800 font-medium
+						                   rounded-lg text-center transition">
+
+						            Cancel
+
+						        </a>
+
+						    </div>
+
+						</form>
+			        </div>
+
+			    </div>
+
+			</div>
+
+        </main>
+
+    </div>
+
+    <script>
+        console.log(" ");
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}" lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Home Page</title>
+
+</head>
+
+<body>
+
+	<div id="content" class="min-h-screen flex flex-col">
+
+		<div th:replace="~{navbar :: navbar}">
+		</div>
+
+		<!---   All SocialMedia Videos Link -->
+
+		<main class="max-w-9xl mx-2 mx-auto px-4 py-4" data-th-unless="${socialMediaPage.empty}">
+
+			<form method="get" th:action="@{/public/moreVideos}" class="flex gap-3 mb-6">
+
+				<input type="text" name="keyword" th:value="${keyword}" placeholder="Search videos..."
+					class="w-full rounded-lg border-gray-300" />
+
+				<button class="bg-blue-600 text-white px-6 rounded-lg cursor-pointer">
+
+					Search
+
+				</button>
+
+			</form>
+			
+			<!--- Long Youtube Videos -->
+			<div th:replace="~{fragments/youtubeLongVideos :: youtubeLongVideo}"></div>
+
+			<!--- Sort Youtube Videos -->
+			<div th:replace="~{fragments/allSortVideo :: sortVideo}"></div>
+
+			
+			<!---Emergency Videos -->
+			<div th:replace="~{fragments/emergencyVideo :: emergencyVideo}"></div>
+			
+			<!--- Start Paging -->
+
+			<div data-th-unless="${socialMediaPage.empty}"
+				class="pagination_container bg-white min-w-full py-2 text-center">
+				<nav aria-label="Page navigation example">
+					<ul class="inline-flex  text-sm">
+						<li data-th-unless="${socialMediaPage.first}">
+							<a data-th-href="@{'/public/moreVideos?size='+${pageSize}+'&page='+ ${socialMediaPage.number-1}}"
+								class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border 
+											  border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-s-base text-sm px-3 h-9 
+											  focus:outline-none">Previous</a>
+						</li>
+						<li data-th-each="index : ${#numbers.sequence(0,socialMediaPage.totalPages-1)}">
+							<a data-th-href="@{'/public/moreVideos?size='+${pageSize}+'&page='+${index}}"
+								data-th-classappend="${index==socialMediaPage.number?'bg-blue-600':'bg-white-600'}"
+								class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border
+											    border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium text-sm w-9 h-9 
+												focus:outline-none" data-th-text="${index+1}">1</a>
+						</li>
+
+						<li data-th-unless="${socialMediaPage.isLast}">
+							<a data-th-href="@{'/public/moreVideos?size='+${pageSize}+'&page='+${socialMediaPage.number+1}}"
+								class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border 
+											  border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-e-base text-sm px-3 h-9 
+											  focus:outline-none">Next</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+
+		</main>
+		<!-- End Main Page -->
+
+		<div data-th-if="${socialMediaPage.empty}"
+		 class="text-center bg-white p-4">
+		 
+		<h1 class=" text-5xl my-3" >No result found</h1>
+		
+		<a data-th-href="@{'/public/moreVideos'}"
+		class="bg-blue-600 text-white px-6 py-2 rounded-lg cursor-pointer">
+         Go Back</a>
+		 
+		</div>
+	</div>
+	<script></script>
+</body>
+
+</html>

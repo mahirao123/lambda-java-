@@ -1,0 +1,126 @@
+<!-- =========================================================
+     OTHER SLIDER
+     LARGE  = 4
+     MEDIUM = 2
+     MOBILE = 1
+     ========================================================= -->
+
+<div th:fragment="otherSlider"
+     class="other-slider-section">
+
+    <div th:if="${sliders != null and !#lists.isEmpty(sliders)}"
+         id="otherSlider"
+         class="other-slider">
+		 
+		 <h1 class="text-2xl font-bold  text-blue-700 mb-2 hover:text-red-600 ">
+		 Promote Your Brand Here!
+		 </h1>
+
+
+
+        <!-- =================================================
+             VIEWPORT
+             ================================================= -->
+
+        <div class="other-slider-viewport">
+
+
+            <!-- =================================================
+                 HORIZONTAL TRACK
+                 ================================================= -->
+
+            <div id="otherSliderTrack"
+                 class="other-slider-track">
+
+
+                <!-- =================================================
+                     EACH OTHER SLIDE
+                     ================================================= -->
+
+                <div th:each="obj, stat : ${sliders}"
+				th:if="${obj.sliderType=='OTHER'}"
+                     class="other-slide">
+
+
+                    <!-- =================================================
+                         FIXED MEDIA FRAME
+                         ================================================= -->
+
+                    <div class="other-media-frame">
+
+
+                        <!-- ================= IMAGE ================= -->
+
+                        <img th:if="${obj.mediaType != null and
+                                     obj.mediaType.equalsIgnoreCase('IMAGE')}"
+                             th:src="${obj.mediaUrl}"
+                             class="other-media"
+                             alt="Other Slide Image">
+
+
+                        <!-- ================= VIDEO ================= -->
+
+                        <video th:if="${obj.mediaType != null and
+                                       obj.mediaType.equalsIgnoreCase('VIDEO')}"
+                               class="other-media other-slide-video"
+                               muted
+                               loop
+                               playsinline
+                               preload="metadata">
+
+                            <source th:src="${obj.mediaUrl}"
+                                    type="video/mp4">
+
+                        </video>
+
+
+                        <!-- ================= MUTE BUTTON ================= -->
+
+                        <button th:if="${obj.mediaType != null and
+                                        obj.mediaType.equalsIgnoreCase('VIDEO')}"
+                                type="button"
+                                class="other-video-mute">
+
+                            <i class="fa-solid fa-volume-xmark"></i>
+
+                        </button>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             PREVIOUS
+             ================================================= -->
+
+        <button id="otherSliderPrev"
+                type="button"
+                class="other-slider-button other-slider-prev">
+
+            <i class="fa-solid fa-chevron-left"></i>
+
+        </button>
+
+
+        <!-- =================================================
+             NEXT
+             ================================================= -->
+
+        <button id="otherSliderNext"
+                type="button"
+                class="other-slider-button other-slider-next">
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </button>
+
+
+    </div>
+
+</div>

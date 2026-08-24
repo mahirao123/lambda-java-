@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html
+data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}"
+lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title
+        data-th-text="${loggedInEmployee != null ? loggedInEmployee.name + ' | Dashboard' : 'Dashboard'}">
+        HrPage
+    </title>
+</head>
+
+<body>
+
+    <div id="content" class="min-h-screen flex flex-col">
+
+
+
+        <!-- Main Content -->
+        <main
+            class="flex-1 px-4 sm:ml-64 transition-all duration-300">
+
+			<div>
+				<h1 class="text-5xl text-center pb-2"> All Employee List</h1>
+				<div class="bg-blue-100 w-cover ">
+				<span>Total Employees:</span>	
+				   <span th:text="${employeePage.getTotalElements()}"></span>
+				</div>
+				
+
+						<form 
+						data-th-object="${employeeSearchForm}"
+						data-th-action="@{'/hr/searchEmployee'}">
+							<div
+							class="flex items-center  justify-start space-x-2 flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 p-4">
+						
+							<!-- select options -->
+
+							<div class="bg-white  rounded-xl shadow-lg max-w-96">
+
+								<select data-th-field="*{field}"
+
+								class="w-full px-8 py-1.5 border border-gray-400 rounded-lg 
+							            focus:outline-none focus:ring-2 focus:ring-blue-300 
+							            focus:border-blue-400">
+
+									<option value="">Select..</option>
+									<option value="name">Name</option>
+									<option value="phoneNumber">Phone</option>
+									<option value="email">Email</option>
+									<option value="role">Role</option>
+									<option value="employeeId">Id</option>
+
+								</select>
+
+							</div>
+
+								<!-- Search Field -->
+
+							<label for="input-group-1" class="sr-only">Search</label>
+							
+							<div class="relative">
+								<div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+									<svg class="w-4 h-4 text-body" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+										width="24" height="24" fill="none" viewBox="0 0 24 24">
+										<path stroke="currentColor" stroke-linecap="round" stroke-width="2"
+											d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+									</svg>
+								</div>
+								<input 
+								data-th-field="*{value}"
+								 type="text" id="input-group-1" class=" rounded-lg block w-full max-w-96 ps-9 pe-3 py-2 bg-neutral-secondary-medium border border-default-medium 
+								text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body"
+									placeholder="Search">
+								</div>
+
+							<!-- Search button -->
+							<button type="submit"
+							
+								class=" px-3 py-1.5 bg-gray-700 text-white rounded-lg border border-default-medium cursor-pointer">Search</button>
+						</div>
+						</form>				
+								
+				<div class="contacts_container">
+
+
+					<div
+						class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+						
+						<div data-th-replace="~{message :: messagebox}"></div>
+						
+					
+
+						<!-- table Start -->
+						 <table
+                    data-th-unless="${employeePage.empty}"
+                    class="w-full text-sm text-left">
+
+                    <thead class="text-sm text-body bg-neutral-secondary-medium border-b border-t border-default-medium">
+                        <tr>
+                            <th class="px-4 py-3">Status</th>
+                            <th class="px-4 py-3">Employee</th>
+                            <th class="px-4 py-3">Role</th>
+                            <th class="px-4 py-3">Phone</th>
+                            <th class="px-4 py-3">Joining Date</th>
+                            <th class="px-4 py-3">Documents</th>
+                            <th class="px-4 py-3 text-center">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr
+                            data-th-each="c:${employeePage}"
+                            data-th-object="${c}"
+                            class="border-b hover:bg-gray-50">
+
+                            <!-- Status -->
+                            <td class="px-4 py-4">
+                                <div data-th-if="*{enabled}"
+                                    class="w-3 h-3 rounded-full bg-green-500">
+                                </div>
+
+                                <div data-th-unless="*{enabled}"
+                                    class="w-3 h-3 rounded-full bg-red-500">
+                                </div>
+                            </td>
+
+                            <!-- Employee -->
+                            <td class="px-4 py-4 min-w-[220px]">
+
+                                <div class="flex items-center gap-3">
+
+                                    <img
+                                        class="w-12 h-12 rounded-full object-cover"
+                                        data-th-src="@{*{profilePic}}"
+                                        alt="profile">
+
+                                    <div>
+                                        <h4 class="font-semibold"
+                                            data-th-text="*{name}">
+                                        </h4>
+
+                                        <p class="text-gray-500 text-xs "
+                                            data-th-text="*{email}">
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </td>
+
+                            <!-- Role -->
+                            <td class="px-4 py-4">
+                                <span
+                                    class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold"
+                                    data-th-text="*{role}">
+                                </span>
+                            </td>
+
+                            <!-- Phone -->
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <i class="fa-solid fa-phone mr-2"></i>
+                                <span data-th-text="*{phoneNumber}"></span>
+                            </td>
+
+                            <!-- Joining Date -->
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <span
+                                    data-th-text="*{joiningDate}">
+                                </span>
+                            </td>
+
+                            <!-- Documents -->
+                            <td class="px-4 py-4 min-w-[260px]">
+
+                                <div class="flex flex-wrap gap-2">
+
+                                    <a th:href="${c.degreePdf}"
+                                        target="_blank"
+                                        class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs">
+                                        Degree
+                                    </a>
+
+                                    <a th:href="${c.bankAccountPic}"
+                                        target="_blank"
+                                        class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">
+                                        Bank
+                                    </a>
+
+                                    <a th:href="${c.panPic}"
+                                        target="_blank"
+                                        class="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs">
+                                        PAN
+                                    </a>
+
+                                    <a th:href="${c.adharPdf}"
+                                        target="_blank"
+                                        class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">
+                                        Aadhaar
+                                    </a>
+
+                                    <a th:href="${c.experienceLetterPdf}"
+                                        target="_blank"
+                                        class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs">
+                                        Experience
+                                    </a>
+
+                                </div>
+                            </td>
+
+                            <!-- Action -->
+                            <td class="px-4 py-4">
+                                <div
+                                    class="flex items-center justify-center gap-2">
+
+                                    <!-- Delete -->
+                                    <button
+                                        th:onclick="deleteEmployee([[${c.employeeId}]])"
+                                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded cursor-pointer">
+
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+
+                                    <!-- Update -->
+                                    <a
+                                        data-th-href="@{'/employee/update_employee/'+*{employeeId}}"
+                                        class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded">
+
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+
+                                    <!-- View -->
+                                    <a
+                                        data-th-href="@{'/employee/view_employee/'+*{employeeId}}"
+                                        class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded">
+
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+
+                                </div>
+                            </td>
+
+                        </tr>
+						
+						
+
+                    </tbody>
+                </table>
+
+
+						
+						<div 
+						data-th-unless="${employeePage.empty}"
+						class="pagination_container bg-white min-w-full py-2 text-center">
+							<nav aria-label="Page navigation example">
+								<ul class="inline-flex  text-sm">
+									<li data-th-unless="${employeePage.first}">
+										<a data-th-href="@{'/hr/employeeList?size='+${pageSize}+'&page='+ ${employeePage.number-1}}"
+											class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border 
+								  border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-s-base text-sm px-3 h-9 
+								  focus:outline-none">Previous</a>
+									</li>
+									<li data-th-each="index : ${#numbers.sequence(0,employeePage.totalPages-1)}">
+										<a data-th-href="@{'/hr/employeeList?size='+${pageSize}+'&page='+${index}}"
+											data-th-classappend="${index==employeePage.number?'bg-blue-600':'bg-white-600'}"
+											class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border
+								    border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium text-sm w-9 h-9 
+									focus:outline-none" data-th-text="${index+1}">1</a>
+									</li>
+
+									<li data-th-unless="${employeePage.isLast}">
+										<a data-th-href="@{'/hr/employeeList?size='+${pageSize}+'&page='+${employeePage.number+1}}"
+											class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border 
+								  border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-e-base text-sm px-3 h-9 
+								  focus:outline-none">Next</a>
+									</li>
+								</ul>
+							</nav>
+						</div>
+						
+						
+						<h1 
+												class="text-center text-5xl bg-white p-4"
+												data-th-if="${employeePage.empty}"
+												>No result found</h1>
+					</div>
+
+
+				</div>
+
+			</div>
+
+        </main>
+
+    </div>
+
+    <script>
+        console.log("HR Dashboard Loaded");
+    </script>
+
+</body>
+
+</html>

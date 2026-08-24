@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}" lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Home Page</title>
+
+</head>
+
+<body>
+
+	<div id="content" class="min-h-screen flex flex-col">
+
+		<div th:replace="~{navbar :: navbar}">
+		</div>
+
+	
+        <!-- Main Content -->
+		
+<main class="mx-1 bg-white transition-all duration-300">
+	<form method="get" th:action="@{/public/podcast/view}" class="flex gap-1 mb-6 ">
+
+		<input type="text" name="keyword" th:value="${keyword}" placeholder="Search here..."
+			class="w-full rounded-lg border-gray-300" />
+
+		<button class="bg-blue-600 text-white px-6 rounded-lg cursor-pointer">
+
+			Search
+
+		</button>
+
+	</form>
+
+
+    <h2 class="text-2xl font-bold my-2  text-center">View Podcast Details</h2>
+
+    <div data-th-replace="~{message :: messagebox}"></div>
+
+    <!-- Horizontal Scroll Container -->
+<div data-th-unless="${podcast.empty}"
+     class="relative overflow-x-auto shadow-md sm:rounded-lg">
+
+    <table class="min-w-[1600px] w-full text-sm text-left text-gray-500">
+
+        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+            <tr>
+
+                <th scope="col" class="px-8 py-4 w-[80px]">
+                    #
+                </th>
+
+                <th scope="col" class="px-8 py-4 w-[180px]">
+                    Host Name
+                </th>
+
+                <th scope="col" class="px-8 py-4 w-[180px]">
+                    Guest Name
+                </th>
+
+                <th scope="col" class="px-8 py-4 w-[160px]">
+                    Date
+                </th>
+
+                <th scope="col" class="px-8 py-4 w-[140px]">
+                    Time
+                </th>
+
+                <th scope="col" class="px-8 py-4 w-[160px]">
+                    Duration
+                </th>
+
+
+
+                <th scope="col" class="px-8 py-4 w-[300px]">
+                    Remark
+                </th>
+
+                <th scope="col" class="px-8 py-4 w-[140px]">
+                    Status
+                </th>
+
+				<th scope="col" class="px-8 py-4 w-[220px]">
+				    Podcast URL
+				</th>
+
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr th:each="podcast, status : ${podcast}"
+                class="bg-white border-b hover:bg-gray-50">
+
+                <!-- # -->
+                <td class="px-8 py-5 font-medium text-gray-900">
+                    <span th:text="${status.count}">1</span>
+                </td>
+
+                <!-- Host -->
+                <td class="px-8 py-5 whitespace-nowrap"
+                    th:text="${podcast.hostName}">
+                    Host Name
+                </td>
+
+                <!-- Guest -->
+                <td class="px-8 py-5 whitespace-nowrap"
+                    th:text="${podcast.guestName}">
+                    Guest Name
+                </td>
+
+                <!-- Date -->
+                <td class="px-8 py-5 whitespace-nowrap"
+                    th:text="${#dates.format(podcast.date, 'dd-MM-yyyy')}">
+                    20-08-2026
+                </td>
+
+                <!-- Time -->
+                <td class="px-8 py-5 whitespace-nowrap"
+                    th:text="${podcast.time}">
+                    10:30
+                </td>
+
+                <!-- Duration -->
+                <td class="px-8 py-5 whitespace-nowrap"
+                    th:text="${podcast.duration}">
+                    45 min
+                </td>
+
+
+                <!-- Remark -->
+                <td class="px-8 py-5 max-w-[300px]"
+                    th:text="${podcast.remark}">
+                    Remark
+                </td>
+
+                <!-- Status -->
+                <td class="px-8 py-5">
+
+                    <span th:if="${podcast.enable=='Upcoming'}"
+                          class="px-3 py-1.5 text-xs font-medium
+                                 text-green-800 bg-green-100 rounded-full
+                                 whitespace-nowrap">
+                        Upcoming
+                    </span>
+
+                    <span th:if="${podcast.enable=='End'}"
+                          class="px-3 py-1.5 text-xs font-medium
+                                 text-red-800 bg-red-100 rounded-full
+                                 whitespace-nowrap">
+                        End
+                    </span>
+					
+                    <span th:if="${podcast.enable=='Running'}"
+                          class="px-3 py-1.5 text-xs font-medium
+                                 text-blue-800 bg-blue-100 rounded-full
+                                 whitespace-nowrap">
+                        Running
+                    </span>
+
+                </td>
+
+				<!-- Podcast URL -->
+				<td class="px-8 py-5">
+
+				    <a th:if="${podcast.podcastUrl != null and !podcast.podcastUrl.isEmpty()}"
+				       th:href="${podcast.podcastUrl}"
+				       target="_blank"
+				       class="text-blue-600 hover:text-blue-800 hover:underline">
+
+				        
+				        Watch
+
+				    </a>
+
+				    <span th:unless="${podcast.podcastUrl != null and !podcast.podcastUrl.isEmpty()}"
+				          class="text-gray-400">
+				        No URL
+				    </span>
+
+				</td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<!--- Start Paging -->
+
+<div data-th-unless="${podcast.empty}"
+	class="pagination_container bg-white min-w-full py-2 text-center">
+	<nav aria-label="Page navigation example">
+		<ul class="inline-flex  text-sm">
+			<li data-th-unless="${podcast.first}">
+				<a data-th-href="@{'/public/podcast/view?size='+${pageSize}+'&page='+ ${podcast.number-1}}"
+					class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border 
+								  border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-s-base text-sm px-3 h-9 
+								  focus:outline-none">Previous</a>
+			</li>
+			<li data-th-each="index : ${#numbers.sequence(0,podcast.totalPages-1)}">
+				<a data-th-href="@{'/public/podcast/view?size='+${pageSize}+'&page='+${index}}"
+					data-th-classappend="${index==podcast.number?'bg-blue-600':'bg-white-600'}"
+					class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border
+								    border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium text-sm w-9 h-9 
+									focus:outline-none" data-th-text="${index+1}">1</a>
+			</li>
+
+			<li data-th-unless="${podcast.isLast}">
+				<a data-th-href="@{'/public/podcast/view?size='+${pageSize}+'&page='+${podcast.number+1}}"
+					class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border 
+								  border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-e-base text-sm px-3 h-9 
+								  focus:outline-none">Next</a>
+			</li>
+		</ul>
+	</nav>
+</div>
+
+</main>
+
+		<!-- End Main Page -->
+
+		<div data-th-if="${podcast.empty}"
+		 class="text-center bg-white p-4">
+		 
+		<h1 class=" text-5xl my-3" >No result found</h1>
+		
+		<a data-th-href="@{'/public/podcast/view'}"
+		class="bg-blue-600 text-white px-6 py-2 rounded-lg cursor-pointer">
+         Go Back</a>
+		 
+		</div>
+	</div>
+	<script></script>
+</body>
+
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html
+data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}"
+lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title
+        data-th-text="${loggedInEmployee != null ? loggedInEmployee.name + ' | Dashboard' : 'Dashboard'}">
+        HrPage
+    </title>
+</head>
+
+<body>
+
+    <div id="content" class="min-h-screen flex flex-col">
+
+
+
+        <!-- Main Content -->
+        <main
+            class="flex-1 px-4 sm:ml-64 transition-all duration-300">
+
+			<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+			    <a 
+				data-th-href="@{'/hr/employeeList'}"
+				class="bg-white p-6 rounded-xl shadow cursor-pointer hover:bg-blue-200 hover:text-white">
+					<h3 class="text-blue-500 text-2xl font-bold hover:text-white">Total Employees</h3>	
+					
+			    </a>
+
+
+			    <a 
+				data-th-href="@{'/hr/viewOpening'}"
+				class="bg-white p-6 rounded-xl shadow cursor-pointer hover:bg-blue-200">
+			        <h3 class="text-blue-500 text-2xl font-bold hover:text-white">All Openings</h3>
+					<p 
+					data-th-text="${openingPage.size()}"
+					class="text-3xl font-bold"></p>
+			    </a>
+
+			    <a 
+				data-th-href="@{'/hr/opening'}"
+				class="bg-white p-6 rounded-xl shadow cursor-pointer hover:bg-blue-200">
+			        <h3 class="text-blue-500 text-2xl font-bold hover:text-white">Add New Opening</h3>
+			       
+			    </a>
+
+				<a 
+				data-th-href="@{'/editor/dashboard'}"
+				class="bg-white p-6 rounded-xl shadow cursor-pointer hover:bg-blue-200 hover:text-white">
+					<h3 class="text-blue-500 text-2xl font-bold hover:text-white">GoTo Editor Dashboard</h3>	
+					
+				</a>
+				
+				<a 
+				data-th-href="@{'/hr/podcast/save'}"
+				class="bg-white p-6 rounded-xl shadow cursor-pointer hover:bg-blue-200 hover:text-white">
+					<h3 class="text-blue-500 text-2xl font-bold hover:text-white">Add Podcast</h3>	
+					
+				</a>
+				
+				<a 
+				data-th-href="@{'/hr/podcast/view'}"
+				class="bg-white p-6 rounded-xl shadow cursor-pointer hover:bg-blue-200 hover:text-white">
+					<h3 class="text-blue-500 text-2xl font-bold hover:text-white">Vew Podcast Details</h3>	
+					
+				</a>
+				
+
+			</div>
+
+        </main>
+
+    </div>
+
+    <script>
+        console.log("HR Dashboard Loaded");
+    </script>
+
+</body>
+
+</html>

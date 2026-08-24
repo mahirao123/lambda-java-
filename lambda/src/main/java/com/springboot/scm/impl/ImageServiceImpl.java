@@ -1,0 +1,200 @@
+package com.springboot.scm.impl;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.cloudinary.Cloudinary;
+import com.cloudinary.Transformation;
+import com.cloudinary.utils.ObjectUtils;
+import com.springboot.scm.helpers.AppConstants;
+import com.springboot.scm.services.ImageService;
+
+@Service
+public class ImageServiceImpl implements ImageService {
+
+    private final Cloudinary cloudinary;
+
+    public ImageServiceImpl(Cloudinary cloudinary) {
+        this.cloudinary = cloudinary;
+    }
+
+    @Override
+    public String uploadFile(MultipartFile file, String filename) {
+
+        try {
+
+            // File validation
+            if (file == null || file.isEmpty()) {
+                return null;
+            }
+
+            // Get original filename
+            String originalFilename = file.getOriginalFilename();
+            String extension = "";
+
+            if (originalFilename != null
+                    && originalFilename.contains(".")) {
+
+                extension = originalFilename.substring(
+                        originalFilename.lastIndexOf(".") + 1
+                ).toLowerCase();
+            }
+
+            // Detect resource type
+            String resourceType = "image";
+
+            // Video files
+            if (extension.equals("mp4")
+                    || extension.equals("avi")
+                    || extension.equals("mov")
+                    || extension.equals("mkv")) {
+
+                resourceType = "video";
+            }
+
+            // PDF files
+            else if (extension.equals("pdf")) {
+
+                resourceType = "raw";
+            }
+
+            // Upload file to Cloudinary
+            Map uploadResult = cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.asMap(
+                            "public_id", filename,
+                            "resource_type", resourceType,
+                            "overwrite", true,
+                            "format", extension // preserve extension
+                    )
+            );
+
+            String fileUrl;
+
+            // PDF direct open URL
+            if ("pdf".equals(extension)) {
+
+                fileUrl = cloudinary.url()
+                        .secure(true)
+                        .resourceType("raw")
+                        .generate(filename + ".pdf");
+            }
+
+            // Image / Video URL
+            else {
+
+                fileUrl = uploadResult
+                        .get("secure_url")
+                        .toString();
+            }
+
+            System.out.println("Uploaded URL : " + fileUrl);
+
+            return fileUrl;
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Generate transformed URL using public ID
+    public String getUrlFromPublicId(
+            String publicId,
+            String resourceType
+    ) {
+
+        // Image with transformation
+        if ("image".equals(resourceType)) {
+
+            return cloudinary.url()
+                    .secure(true)
+                    .transformation(
+                            new Transformation<>()
+                                    .width(AppConstants.CONTACT_IMAGE_WIDTH)
+                                    .height(AppConstants.CONTACT_IMAGE_HEIGHT)
+                                    .crop(AppConstants.CONTACT_IMAGE_CROP)
+                    )
+                    .generate(publicId);
+        }
+
+        // PDF direct browser view
+        if ("raw".equals(resourceType)) {
+
+            // avoid duplicate .pdf
+            if (!publicId.endsWith(".pdf")) {
+                publicId = publicId + ".pdf";
+            }
+
+            return cloudinary.url()
+                    .secure(true)
+                    .resourceType("raw")
+                    .generate(publicId);
+        }
+
+        // Video URL
+        return cloudinary.url()
+                .secure(true)
+                .resourceType(resourceType)
+                .generate(publicId);
+    }
+
+    @Override
+    public String getUrlFromPublicId(String publicId) {
+
+        // Handle PDF automatically
+        if (publicId != null
+                && publicId.toLowerCase().endsWith(".pdf")) {
+
+            return cloudinary.url()
+                    .secure(true)
+                    .resourceType("raw")
+                    .generate(publicId);
+        }
+
+        // Default image URL
+        return cloudinary.url()
+                .secure(true)
+                .generate(publicId);
+    }
+
+	@Override
+	public void deleteCloudinaryFile(String cloudinaryId, String mediaType)  throws IOException{
+		
+		Map<String, Object> options = new HashMap<>();
+
+		if ("VIDEO".equalsIgnoreCase(mediaType)) {
+
+		    options.put("resource_type", "video");
+		    options.put("invalidate", true);
+
+		} else if ("PDF".equalsIgnoreCase(mediaType)) {
+
+		    // PDF and other documents should be uploaded as raw
+		    options.put("resource_type", "raw");
+		    options.put("invalidate", true);
+
+		} else if ("IMAGE".equalsIgnoreCase(mediaType)) {
+
+		    options.put("resource_type", "image");
+		    options.put("invalidate", true);
+
+		} else {
+
+		    // Default resource type
+		    options.put("resource_type", "auto");
+		    options.put("invalidate", true);
+		    
+		}
+		
+		Map result=cloudinary.uploader().destroy(cloudinaryId, options);
+		System.out.println("delete from clodinary  "+result);
+	}
+    
+    
+}

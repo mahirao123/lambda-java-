@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html
+data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}"
+lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Complain_Page
+    </title>
+</head>
+
+<body>
+
+    <div id="content" class="min-h-screen flex flex-col">
+		<div th:replace="~{navbar :: navbar}">
+		</div>
+
+		<div 		data-th-each="obj : ${complainPage}"
+				   data-th-object="${obj}"
+				   class="my-5 mx-2 inline-block"
+				   >
+		<a
+		   
+           data-th-href="${obj.complainUrl}"
+           target="_blank"
+           class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-xs sm:text-sm">
+           Complain Form
+       </a>
+	   </div>
+	   
+
+	   <h1
+	       data-th-if="${complainPage.empty}"
+	       class="text-center text-2xl sm:text-5xl bg-white p-6 mt-4">
+	       No Result Found
+	   </h1>
+	   
+	   
+    </div>
+    <script>
+        console.log("HR Dashboard Loaded");
+    </script>
+
+</body>
+
+</html>

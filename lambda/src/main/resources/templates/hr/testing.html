@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialMeadiaUrl</title>
+    
+</head>
+
+<body>
+
+    <div id="content" class="mb-3">
+
+        <div class=" sm:pl-65">
+            <div class="grid grid-cols-12">
+                <div class="col-span-3"></div>
+                <div class="col-span-12 md:col-span-6">
+                    <div
+                        class="bg-neutral-primary-soft block  p-6 border border-default rounded-base shadow-xs hover:bg-neutral-secondary-medium">
+						<div data-th-replace="~{message::messagebox}"></div>
+						
+                        <h1 class="font-semibold pb-5 text-center"> Add SocialMeadiaUrls</h1>
+						
+                       
+						</div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+	
+		
+<!----	<script th:src="@{/js/admin.js}"></script>-->
+	
+</body>
+
+</html>

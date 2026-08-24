@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html 
+th:replace="~{base :: parent(~{:: #mainContent},~{::title},~{::script})}"
+lang="en">
+
+<head>
+    <title th:text="${loggedInUser != null} ? ${loggedInUser.name} + ' | Profile' : 'Profile'"></title>
+</head>
+
+<body>
+
+<div id="mainContent">
+
+    <!-- Sidebar -->
+    <div th:if="${loggedInUser != null}">
+        <div th:replace="user/sidebar :: sidebar"></div>
+    </div>
+
+	<div class="sm:pl-64">
+
+	    <!-- Full Screen Wrapper -->
+	    <div class="min-h-screen bg-gray-100 p-6">
+
+	        <!-- Full Width Card -->
+	        <div class="w-full h-full bg-white rounded-2xl shadow-lg p-8">
+
+	            <!-- Main Grid -->
+	            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center h-full">
+
+	                <!-- LEFT: Profile -->
+	                <div class="flex flex-col items-center text-center">
+
+	                    <img 
+	                        th:src="${loggedInUser.profilePic}" 
+	                        onerror="this.src='/images/profile.png'"
+	                        class="w-40 h-40 rounded-full border-4 border-blue-500 object-cover">
+
+	                    <!-- Edit Button -->
+	                    <button type="button" 
+	                        class="mt-4 px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+	                        Edit Profile
+	                    </button>
+
+	                    <h2 class="mt-4 text-3xl font-semibold"
+	                        th:text="${loggedInUser.name}"></h2>
+
+	                    <p class="text-gray-500 text-lg"
+	                       th:text="${loggedInUser.email}"></p>
+	                </div>
+
+	                <!-- RIGHT: Details -->
+	                <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+
+	                    <div>
+	                        <b class="text-gray-700">Phone:</b><br>
+	                        <span th:text="${loggedInUser.phoneNumber}"></span>
+	                    </div>
+
+	                    <div>
+	                        <b class="text-gray-700">Address:</b><br>
+	                        <span th:text="${loggedInUser.about}"></span>
+	                    </div>
+
+	                    <div>
+	                        <b class="text-gray-700">Provider:</b><br>
+	                        <span th:text="${loggedInUser.provider}"></span>
+	                    </div>
+
+	                </div>
+
+	            </div>
+
+	        </div>
+
+	    </div>
+
+	</div>
+
+</div>
+
+</body>
+</html>

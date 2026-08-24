@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html
+data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}"
+lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title
+        data-th-text="${loggedInEmployee != null ? loggedInEmployee.name + ' | Dashboard' : 'Dashboard'}">
+        HrPage
+    </title>
+</head>
+
+<body>
+
+    <div id="content" class="min-h-screen flex flex-col">
+
+
+
+        <!-- Main Content -->
+		
+<main class=" px-4 sm:ml-64 transition-all duration-300">
+
+    <h2 class="text-2xl font-bold mb-4">All Openings</h2>
+
+	<h3>
+	    <a
+	        data-th-href="@{'/hr/opening'}"
+	        class="text-blue-500 text-2xl font-bold hover:text-blue-700 inline"
+	    >
+	        Add New Opening
+	    </a>
+	</h3> 
+	
+    <div data-th-replace="~{message :: messagebox}"></div>
+
+    <!-- Horizontal Scroll Container -->
+    <div class="overflow-x-auto rounded-lg shadow border">
+
+        <table
+            data-th-unless="${openingPage.empty}"
+            class="min-w-[900px] w-full bg-white">
+
+            <thead>
+                <tr class="text-sm bg-gray-100 border-b">
+                    <th class="p-3 text-left">Role</th>
+                    <th class="p-3 text-left">Start Date</th>
+                    <th class="p-3 text-left">End Date</th>
+                    <th class="p-3 text-left">About</th>
+                    <th class="p-3 text-center">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr
+                    data-th-each="obj : ${openingPage}"
+                    data-th-object="${obj}"
+                    class="border-b hover:bg-gray-50 text-sm">
+
+                    <td class="p-3" data-th-text="*{role}"></td>
+
+                    <td class="p-3" data-th-text="*{startDate}"></td>
+
+                    <td class="p-3" data-th-text="*{endDate}"></td>
+
+                    <td class="p-3 max-w-xs break-words"
+                        data-th-text="*{about}">
+                    </td>
+
+                    <td class="p-3">
+                        <div class="flex flex-wrap gap-2 justify-center">
+
+                            <a
+                                data-th-href="${obj.link}"
+                                target="_blank"
+                                class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-xs sm:text-sm">
+                                Apply Now
+                            </a>
+
+                            <a
+                                th:href="@{/hr/opening/update/{id}(id=${obj.id})}"
+                                class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded text-xs sm:text-sm">
+                                Update
+                            </a>
+
+                            <button
+                                th:onclick="deleteOpening([[${obj.id}]])"
+                                class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded cursor-pointer text-xs sm:text-sm">
+                                Delete
+                            </button>
+
+                        </div>
+                    </td>
+
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h1
+        data-th-if="${openingPage.empty}"
+        class="text-center text-2xl sm:text-5xl bg-white p-6 mt-4">
+        No Result Found
+    </h1>
+
+</main>
+
+    </div>
+
+    <script>
+        console.log("HR Dashboard Loaded");
+    </script>
+
+</body>
+
+</html>

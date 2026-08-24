@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" th:fragment="parent(content, title,script)" xmlns:th="http://www.thymeleaf.org" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">Base</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+    <link rel="stylesheet" data-th-href="@{/css/output.css}">
+    <link rel="stylesheet" data-th-href="@{/css/style.css}">
+    <link rel="stylesheet" data-th-href="@{/css/emergencyVideo.css}">
+    <link rel="stylesheet" data-th-href="@{/css/mainSlider.css}">
+    <link rel="stylesheet" data-th-href="@{/css/otherSlider.css}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+	
+</head>
+
+<body class="bg-gray-100"> 
+	
+	<div th:replace="~{user/view_contact :: viewContact}"></div>
+
+    <!-- Navbar -->
+	
+	<!-- Sidebar + Navbar -->
+	<div th:if="${loggedInEmployee != null}">
+
+	    <!-- Only For Hr Login -->
+		<div th:if="${loggedInEmployee.role=='ROLE_HR'}">
+	    <div th:replace="~{hr/sidebar :: hrsidebar}"></div>
+		</div>
+		
+	    <!-- Only For Editor Login -->
+		<div th:if="${loggedInEmployee.role=='ROLE_EDITOR'}">
+	     <div th:replace="~{editor/sidebar :: editorSidebar}"></div>
+		</div>
+		
+	    <!-- Navbar -->
+	    <div th:replace="~{employeeFile/navbar :: commonEmployeeNavbar}"></div>
+
+	</div>
+	 
+
+    <!-- it will show when user loggedin -->
+    <div th:if="${loggedInUser}">
+        <div th:replace="~{user/user_loggedIn :: user_navbar}">        
+        </div>
+    </div>
+	
+	 <!-- it will show when user not loggedin 	-->
+	 
+
+
+    <!-- Page content -->
+	
+		<main class="pt-[80px] ">
+		    <section th:replace="${content}"></section>
+		</main>
+
+		<!-- Footer content 
+		<div 
+		
+		th:replace="~{fragments/footer :: footer}"></div> -->
+		
+	
+		<script th:src="@{/js/admin.js}"></script>
+		<script th:src="@{/js/mainSlider.js}"></script>
+		<script th:src="@{/js/otherSlider.js}"></script>
+		<script th:src="@{/js/script.js}"></script>
+		<script th:src="@{/js/delete.js}"></script>
+		<script th:src="@{/js/emergencyVideo.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+	<!-- <th:block data-th-replace="${script}"></th:block> -->
+</body>
+
+</html>

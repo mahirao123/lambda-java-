@@ -1,0 +1,136 @@
+<!-- =========================================================
+     MAIN SLIDER
+     All screen sizes = 1 slide
+     Image + Video supported
+     Video = autoplay + muted
+     ========================================================= -->
+
+<div th:fragment="videoAndImageSlider"
+     class="main-slider-section">
+
+    <div th:if="${mainSliders != null and !#lists.isEmpty(mainSliders)}"
+         id="mainSlider"
+         class="main-slider">
+
+
+        <!-- =================================================
+             VIEWPORT
+             ================================================= -->
+
+        <div class="main-slider-viewport">
+
+
+            <!-- =================================================
+                 TRACK
+                 ================================================= -->
+
+            <div id="mainSliderTrack"
+                 class="main-slider-track">
+
+
+                <!-- =================================================
+                     SLIDES
+                     ================================================= -->
+
+                <div th:each="slider, stat : ${mainSliders}"
+                     class="main-slide">
+
+
+                    <!-- =================================================
+                         FIXED MEDIA FRAME
+                         ================================================= -->
+
+                    <div class="main-media-frame">
+
+
+                        <!-- ================= IMAGE ================= -->
+
+                        <img th:if="${slider.mediaType != null
+                                     and slider.mediaType.equalsIgnoreCase('IMAGE')}"
+                             th:src="${slider.mediaUrl}"
+                             class="main-media"
+                             alt="Main Slider Image">
+
+
+                        <!-- ================= VIDEO ================= -->
+
+                        <video th:if="${slider.mediaType != null
+                                       and slider.mediaType.equalsIgnoreCase('VIDEO')}"
+                               class="main-media main-slide-video"
+                               muted
+                               playsinline
+                               preload="metadata">
+
+                            <source th:src="${slider.mediaUrl}"
+                                    type="video/mp4">
+
+                        </video>
+
+
+                        <!-- ================= VIDEO MUTE BUTTON ================= -->
+
+                        <button
+                            th:if="${slider.mediaType != null
+                                   and slider.mediaType.equalsIgnoreCase('VIDEO')}"
+                            type="button"
+                            class="main-video-mute">
+
+                            <i class="fa-solid fa-volume-xmark"></i>
+
+                        </button>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             PREVIOUS
+             ================================================= -->
+
+        <button id="mainSliderPrev"
+                type="button"
+                class="main-slider-button main-slider-prev z-20">
+
+            <i class="fa-solid fa-chevron-left"></i>
+
+        </button>
+
+
+        <!-- =================================================
+             NEXT
+             ================================================= -->
+
+        <button id="mainSliderNext"
+                type="button"
+                class="main-slider-button main-slider-next z-20">
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </button>
+
+
+        <!-- =================================================
+             PAGINATION
+             ================================================= -->
+
+        <div class="main-slider-dots">
+
+            <button th:each="slider, stat : ${mainSliders}"
+                    type="button"
+                    class="main-slider-dot"
+                    th:attr="data-main-slide=${stat.index}"
+                    th:aria-label="'Slide ' + ${stat.index + 1}">
+            </button>
+
+        </div>
+
+
+    </div>
+
+</div>

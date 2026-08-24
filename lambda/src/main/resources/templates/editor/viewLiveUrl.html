@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}" lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title data-th-text="${loggedInEmployee != null ? loggedInEmployee.name + ' | LiveUrl' : 'LiveUrl'}">
+		Live Url
+	</title>
+</head>
+
+<body>
+
+	<div id="content" class="min-h-screen flex flex-col">
+
+
+
+		<!-- Main Content -->
+		<main class="flex-1 px-4 sm:ml-64 transition-all duration-300">
+
+			<div>
+				<h1 class="text-5xl text-center pb-2 mb-2">Live Url</h1>
+
+<div class="p-6 mt-4 space-y-2">
+
+    <!-- Show Add Live Url when no live URL exists -->
+    <h3 th:if="${liveUrl == null or #lists.isEmpty(liveUrl)}"
+        class="text-2xl font-bold">
+
+        <a th:href="@{/editor/liveUrl}"
+           class="text-blue-500 hover:text-blue-700 hover:underline">
+            Add Live Url
+        </a>
+
+    </h3>
+
+    <!-- Show message when a live URL already exists -->
+    <h3 th:unless="${liveUrl == null or #lists.isEmpty(liveUrl)}"
+        class="text-red-600 text-lg font-semibold">
+
+        Only one Live Link is acceptable at a time.
+        Delete the existing Live Link to add a new Live Link.
+
+    </h3>
+
+</div>
+
+
+				<div class="contacts_container">
+
+
+					<div
+						class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+
+						<div data-th-replace="~{message :: messagebox}"></div>
+
+
+
+						<!-- table Start -->
+						<table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+
+							<!-- Table Header -->
+							<thead
+								class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+								<tr>
+									<th scope="col" class="px-6 py-3">
+										S.No.
+									</th>
+
+									<th scope="col" class="px-6 py-3">
+										URL
+									</th>
+
+									<th scope="col" class="px-6 py-3 text-center">
+										Actions
+									</th>
+								</tr>
+							</thead>
+
+							<!-- Table Body -->
+							<tbody>
+
+								<tr th:each="url, stat : ${liveUrl}"
+									class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+
+									<!-- ID / Serial Number -->
+									<td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+										<span th:text="${stat.count}">1</span>
+									</td>
+
+									<!-- URL -->
+									<td class="px-6 py-4">
+
+										<a th:if="${url.liveUrl != null and !#strings.isEmpty(url.liveUrl)}"
+											th:href="${url.liveUrl}" target="_blank"
+											class="text-blue-600 hover:underline break-all" th:text="${url.liveUrl}">
+											https://example.com
+										</a>
+
+										<span th:unless="${url.liveUrl != null and !#strings.isEmpty(url.liveUrl)}"
+											class="text-gray-400">
+											No URL
+										</span>
+
+									</td>
+
+									<!-- Actions -->
+									<td class="px-6 py-4">
+
+										<div class="flex items-center justify-center gap-2">
+
+
+											<!-- Delete Button -->
+											<a th:href="@{'/editor/liveUrl/delete/' + ${url.id}}"
+												onclick="return confirm('Are you sure you want to delete this Live Url?');"
+												class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-300">
+
+												<i class="fa-solid fa-trash"></i>
+
+												Delete
+											</a>
+
+										</div>
+
+									</td>
+
+								</tr>
+
+
+
+							</tbody>
+
+						</table>
+
+						<div class="text-center text-2xl sm:text-5xl bg-white p-6 mt-4 space-2"
+							data-th-if="${liveUrl.empty}">
+
+							<h3 class="text-2xl font-bold">
+								Not Found
+							</h3>
+
+						</div>
+
+					</div>
+
+
+				</div>
+
+			</div>
+
+		</main>
+
+	</div>
+
+	<script>
+		console.log("HR Dashboard Loaded");
+	</script>
+
+</body>
+
+</html>

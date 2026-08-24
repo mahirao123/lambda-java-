@@ -1,0 +1,45 @@
+//taking data from repository and send to security configuration
+package com.springboot.scm.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import com.springboot.scm.repositories.UserRepo;
+
+@Service
+public class SecurityCostomUserDetailService implements UserDetailsService{
+	
+	@Autowired
+	private UserRepo userRepo;
+
+	@Override
+	public UserDetails loadUserByUsername(String username)
+	        throws UsernameNotFoundException {
+
+	    System.out.println("Login email: " + username);
+
+	    UserDetails user = userRepo
+	            .findByEmail(username)
+	            .orElseThrow(() ->
+	                    new UsernameNotFoundException(
+	                            "User Not found with: "
+	                                    + username));
+
+	    System.out.println("User found: "
+	            + user.getUsername());
+
+	    System.out.println("Roles: "
+	            + user.getAuthorities());
+	    
+	    user.getAuthorities().forEach(auth ->
+        System.out.println(
+                "Authority = "
+                        + auth.getAuthority()));
+
+	    return user;
+	}
+
+}

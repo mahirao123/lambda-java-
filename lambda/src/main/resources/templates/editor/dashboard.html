@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html
+data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}"
+lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title
+        data-th-text="${loggedInEmployee != null ? loggedInEmployee.name + ' | Editor Dashboard' : 'Editor Dashboard'}">
+        Editor Dashboard
+    </title>
+</head>
+
+<body>
+
+    <div id="content" class="min-h-screen flex flex-col">
+
+
+        <!-- Main Content -->
+        <main
+            class="flex-1 px-4 sm:ml-64 transition-all duration-300">
+
+			<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+			    <a 
+				data-th-href="@{'/editor/complainsResult'}"
+				class="bg-white p-6 rounded-xl shadow cursor-pointer hover:bg-blue-200 hover:text-white">
+					<h3 class="text-blue-500 text-2xl font-bold hover:text-white">Total Complain</h3>	
+					
+			    </a>
+				
+				<a 
+				 data-th-href="@{'/editor/slider/add'}"
+				 class="bg-white p-6 rounded-xl shadow">
+				    <h3 class="text-blue-500 text-2xl font-bold">Add Slide</h3>
+				    
+				</a>
+				<a 
+				 data-th-href="@{'/editor/slider/viewSlide'}"
+				 class="bg-white p-6 rounded-xl shadow">
+				    <h3 class="text-blue-500 text-2xl font-bold">All Slides</h3>
+				    
+				</a>
+
+
+			    <a 
+				 data-th-href="@{'/editor/viewAllVideos'}"
+				 class="bg-white p-6 rounded-xl shadow">
+			        <h3 class="text-blue-500 text-2xl font-bold">All Posted Videos</h3>
+			        
+			    </a>
+			    <a 
+				 data-th-href="@{'/editor/slidingText'}"
+				 class="bg-white p-6 rounded-xl shadow">
+			        <h3 class="text-blue-500 text-2xl font-bold">Add SlidingText</h3>
+			        
+			    </a>
+
+			    <a 
+				data-th-href="@{'/editor/viewSlidingText'}"
+				class="bg-white p-6 rounded-xl shadow cursor-pointer hover:bg-blue-200">
+			        <h3 class="text-blue-500 text-2xl font-bold hover:text-white">View Sliding Text</h3>
+					<p 
+					
+					class="text-3xl font-bold"></p>
+			    </a>
+
+			    <a 
+				data-th-href="@{'/editor/viewLiveUrl'}"
+				class="bg-white p-6 rounded-xl shadow cursor-pointer hover:bg-blue-200">
+			        <h3 class="text-blue-500 text-2xl font-bold hover:text-white">View Live Url</h3>
+			       
+			    </a>
+			</div>
+
+        </main>
+
+    </div>
+
+    <script>
+        console.log("HR Dashboard Loaded");
+    </script>
+
+</body>
+
+</html>

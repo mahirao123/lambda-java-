@@ -1,0 +1,141 @@
+<!---Emergency Videos -->
+<div th:fragment="emergencyVideo" class="bg-white p-6 rounded-lg shadow my-2">
+
+	<h1 class="text-2xl font-bold  text-red-600 mb-8 ">
+		<a class="hover:text-blue-600 " data-th-href="@{'/public/moreVideos'}">Other Videos</a>
+
+	</h1>
+
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full h-auto">
+
+		<!-- Video Card -->
+		<div th:each="video : ${socialMediaPage.content}"
+			th:if="${video.emergencyVideo != null and !#strings.isEmpty(video.emergencyVideo)}"
+			class="bg-gray rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition duration-300">
+
+			<!--Emergency Videos -->
+			<div data-th-if="${video.emergencyVideo}">
+
+				<!-- ========================= -->
+				<!-- YouTube Style Video Card -->
+				<!-- ========================= -->
+				<div class="video-card relative aspect-video">
+					<div
+						class="w-68 h-38 m-1 border rounded-lg bg-gray-100 flex items-center justify-center hover:bg-gray-200 overflow-hidden">
+						<!-- Video -->
+						<video class="preview-video w-full h-full object-cover" preload="metadata" playsinline muted>
+
+							<source th:src="${video.emergencyVideo}" type="video/mp4">
+							Your browser does not support HTML5 video.
+
+						</video>
+					</div>
+					<!-- ===================== -->
+					<!-- Click Overlay -->
+					<!-- ===================== -->
+					<div class="video-overlay absolute inset-0  cursor-pointer">
+					</div>
+
+					<!-- ===================== -->
+					<!-- Center Play Button -->
+					<!-- ===================== -->
+					<button type="button" class="play-btn absolute inset-0 flex items-center justify-center z-2">
+
+						<i class="play-icon fa-solid fa-circle-play"></i>
+
+					</button>
+
+					<!-- ===================== -->
+					<!-- Bottom Controls -->
+					<!-- ===================== -->
+					<div class="video-controls absolute bottom-0 left-0 right-0 z-0">
+
+						<!-- Progress -->
+						<div class="px-3 pt-2">
+
+							<input type="range" class="progress-bar w-full" value="0" min="0" max="100">
+
+						</div>
+
+						<!-- Bottom Row -->
+						<div class="flex items-center justify-between px-3 py-2">
+
+							<!-- Left -->
+							<div class="flex items-center gap-3">
+
+								<!-- Play -->
+								<button type="button" class="play-toggle">
+
+									<i class="play-toggle-icon fa-solid fa-play"></i>
+
+								</button>
+
+								<!-- Mute -->
+								<button type="button" class="mute-btn">
+
+									<i class="mute-icon fa-solid fa-volume-xmark"></i>
+
+								</button>
+
+								<!-- Volume -->
+								<input type="range" class="volume-slider" min="0" max="1" step="0.1" value="1">
+
+								<!-- Time -->
+								<span class="video-time">
+
+									<span class="current-time">00:00</span>
+
+
+
+									<span class="duration">00:00</span>
+
+								</span>
+
+							</div>
+
+							<!-- Right -->
+							<div class="flex items-center gap-3">
+
+								<!-- Fullscreen -->
+								<button type="button" class="fullscreen-btn">
+
+									<i class="fa-solid fa-expand"></i>
+
+								</button>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+
+			</div>
+
+			<div>
+				<h2 class="text-xl font-bold text-gray-900 mb-2" th:text="${video.subject}">
+					Video Title
+				</h2>
+
+				<div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+
+					<span th:text="${video.address}">
+						Description
+					</span>
+
+					<span th:text="${video.dateTime}">
+						Date
+					</span>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+
+
+</div>

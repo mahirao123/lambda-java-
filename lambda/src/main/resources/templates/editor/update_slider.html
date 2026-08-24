@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}" lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title data-th-text="${loggedInEmployee != null ? loggedInEmployee.name + ' | updateMainSlide' : 'updateMainSlide'}">
+		updateMainSlide
+	</title>
+</head>
+
+<body class="bg-gray-200">
+
+	<div id="content" class="min-h-screen flex flex-col">
+
+		<!-- Main Content -->
+		<main class="flex-1 px-4 sm:ml-64 transition-all duration-300">
+
+			<div class="container mx-auto px-4 py-8">
+
+				<div class="max-w-xl mx-auto">
+
+					<div class="bg-white rounded-xl shadow-lg">
+
+						<!-- Header -->
+						<div class="border-b px-6 py-4">
+							<h2 class="text-2xl font-bold text-gray-800">
+								Update Main Slide
+							</h2>
+							<p class="text-gray-500 mt-1">
+								Fill the details below to create a new Slide.
+							</p>
+						</div>
+						<div data-th-replace="~{message::messagebox}"></div>
+						<!-- Form -->
+						<form th:action="@{'/editor/slider/do-update/'+${sliderId}}" method="post" th:object="${sliderForm}"
+							enctype="multipart/form-data" class="max-w-xl mx-auto p-6 bg-white rounded-lg shadow">
+
+
+							<div class="mb-4">
+							    <label for="slideType" class="block mb-2 font-medium">
+							        Slide Type
+							    </label>
+
+							    <select data-th-field="*{sliderType}"
+							           
+							            class="w-full border rounded-lg p-2">
+
+							        <option value="">-- Select Slide Type --</option>
+							        <option value="MAIN">Main</option>
+							        <option value="OTHER">Other</option>
+
+							    </select>
+
+							    <p class="mt-1 text-sm text-red-600"
+							       th:if="${#fields.hasErrors('sliderType')}"
+							       th:errors="*{sliderType}">
+							    </p>
+							</div>
+							
+
+							<div class="mb-4">
+								<label class="block mb-2 font-medium">
+									About
+								</label>
+
+								<input data-th-field="*{about}" name="about" class="w-full border rounded-lg p-2">
+
+								<p class="mt-1 text-sm text-red-600" th:if="${#fields.hasErrors('about')}"
+									th:errors="*{about}">
+								</p>
+							</div>
+
+							<div class="mb-4">
+								<label class="block mb-2 font-medium">
+									Banner Text
+								</label>
+
+								<input data-th-field="*{bannerText}" name="title" class="w-full border rounded-lg p-2">
+
+								<p class="mt-1 text-sm text-red-600" th:if="${#fields.hasErrors('bannerText')}"
+									th:errors="*{bannerText}">
+								</p>
+							</div>
+
+							<div class="mb-4">
+								<label class="block mb-2 font-medium">
+									Upload Image / Video
+								</label>
+
+								<input th:field="*{file}" type="file" name="file" id="image_file_input"
+									accept="image/*,video/*" class="block w-full border rounded-lg">
+							</div>
+
+							<div
+								class="w-80 h-28 border rounded-lg bg-gray-100 flex items-center justify-center hover:bg-gray-200 mb-2">
+
+
+
+								<!-- Image -->
+								<img id="upload_image_preview" th:src="*{mediaUrl}"
+									class="w-40 h-full object-cover rounded-lg item-center">
+
+								<!-- Video -->
+								<video id="upload_video_preview"
+									class="w-40 iten-center h-full object-cover rounded-lg preview-video" autoplay muted
+									loop playsinline onmouseenter="this.pause()" onmouseleave="this.play()">
+									<source th:src="*{mediaUrl}" type="video/mp4">
+									Your browser does not support the video tag.
+								</video>
+
+							</div>
+
+							<button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+								Update Slider
+							</button>
+
+						</form>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</main>
+
+	</div>
+
+	<script>
+		console.log("HR Dashboard Loaded");
+	</script>
+
+</body>
+
+</html>

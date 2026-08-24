@@ -1,0 +1,60 @@
+<!--- Long Youtube Videos -->
+
+<div 
+th:fragment="youtubeLongVideo"
+class="bg-white p-6 rounded-lg shadow my-2">
+
+	<h1 class="text-2xl font-bold  text-red-600 mb-8 ">
+		<a class="hover:text-blue-600 " data-th-href="@{'/public/moreVideos'}">Long Videos</a>
+
+	</h1>
+
+	
+	
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full h-100">
+
+		<!-- Video Card -->
+		<div th:each="video : ${socialMediaPage.content}"
+		th:if="${video.youtubeLink != null and !#strings.isEmpty(video.youtubeLink)}"
+			class="bg-gray rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition duration-300">
+
+			<!-- YouTube -->
+
+			<!-- Content -->
+			<div class="p-2 relative">
+
+				<!--Youtube Video -->
+				<div 
+					class="aspect-video rounded-lg overflow-hidden">
+					<iframe class="w-full h-full " th:src="${video.youtubeEmbedLink}"
+						title="YouTube video player" frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						allowfullscreen>
+					</iframe>
+				</div>
+				
+				
+				<h2 class="text-xl font-bold text-gray-900 mb-2" th:text="${video.subject}">
+					Video Title
+				</h2>
+
+				<div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+
+					<span th:text="${video.address}">
+						Description
+					</span>
+
+					<span th:text="${video.dateTime}">
+						Date
+					</span>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+</div>

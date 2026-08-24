@@ -1,0 +1,33 @@
+<!-- =========================================================
+     OTHER SLIDER
+     ========================================================= -->
+
+<div th:fragment="otherSlider"
+th:each="obj, stat : ${otherSliders}"
+     class="w-full max-w-7xl mx-auto px-4 py-6">
+	 <a  target="_blank">
+	      <div
+	          class="w-48 h-28 border rounded-lg bg-gray-100 flex items-center justify-center hover:bg-gray-200 overflow-hidden">
+
+	          <!-- Image -->
+	          <img th:if="${obj.mediaType == 'IMAGE'}"
+	               th:src="${obj.mediaUrl}"
+	               class="w-full h-full object-cover rounded-lg"
+	               alt="Slide Image">
+
+	          <!-- Video -->
+	          <video th:if="${obj.mediaType == 'VIDEO'}"
+	                 class="w-full h-full object-cover rounded-lg preview-video"
+	                 autoplay
+	                 muted
+	                 loop
+	                 playsinline
+	                 onmouseenter="this.pause()"
+	                 onmouseleave="this.play()">
+	              <source th:src="${obj.mediaUrl}" type="video/mp4">
+	              Your browser does not support the video tag.
+	          </video>
+
+	      </div>
+	  </a>
+</div>

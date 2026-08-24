@@ -1,0 +1,106 @@
+<div th:fragment="slidingText"
+     class="relative w-full max-w-5xl mx-auto z-10">
+
+    <!-- =====================================================
+         SLIDING TEXT OVER SLIDER
+         ===================================================== -->
+
+    <div class="absolute bottom-0 left-0 right-0
+                flex items-center
+                h-12
+                z-30
+                bg-black/80
+                text-red-600
+                text-[20px]
+                font-bold
+                overflow-hidden">
+
+        <!-- =====================================================
+             LIVE STATUS
+             ===================================================== -->
+
+        <div class="mr-4 flex-shrink-0">
+
+            <!-- LIVE URL PRESENT -->
+            <a th:if="${live != null and !#lists.isEmpty(live)
+                      and live[0].liveUrl != null
+                      and !#strings.isEmpty(live[0].liveUrl)}"
+
+               th:href="${live[0].liveUrl}"
+               target="_blank"
+               rel="noopener noreferrer"
+
+               class="live-status live-active">
+
+                <span class="live-dot"></span>
+                <span>LIVE</span>
+
+            </a>
+
+
+            <!-- LIVE URL NOT PRESENT -->
+            <div th:if="${live == null or #lists.isEmpty(live)
+                        or live[0].liveUrl == null
+                        or #strings.isEmpty(live[0].liveUrl)}"
+
+                 class="live-status live-inactive">
+
+                <span class="live-dot"></span>
+                <span>LIVE</span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             SCROLLING AREA
+             ===================================================== -->
+<!-- Scrolling area -->
+<div th:if="${slidingTexts != null and !#lists.isEmpty(slidingTexts)}"
+     class="relative flex-1 h-full overflow-hidden">
+
+    <div class="animate-marquee
+                absolute left-0 top-0
+                h-full
+                flex items-center
+                whitespace-nowrap
+                font-bold ">
+
+        <div th:each="item : ${slidingTexts}"
+             class="inline-flex items-center flex-shrink-0">
+
+            <!-- Sliding text -->
+            <span class="mx-6 text-[20px] font-extrabold uppercase tracking-wide">
+
+                <!-- Clickable text -->
+                <a th:if="${item.url != null and !#strings.isEmpty(item.url)}"
+                   th:href="${item.url}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   th:text="${item.text}"
+                   class="text-[20px] text-blue-700 underline">
+                </a>
+
+                <!-- Normal text -->
+                <span th:unless="${item.url != null and !#strings.isEmpty(item.url)}"
+                      th:text="${item.text}"
+                      class="text-[20px]">
+                </span>
+
+            </span>
+
+            <!-- Separator -->
+            <span class="mx-2 text-[20px] text-yellow-300">
+                ●
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+    </div>
+
+</div>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Contacts</title>
+    
+</head>
+
+<body>
+
+    <div id="content" class="mb-3">
+
+        <!-- This sidebar will show when user  loggedin -->
+        <div th:if="${loggedInUser}">
+            <div data-th-replace="~{user/sidebar :: sidebar}">
+            </div>
+        </div>
+
+
+        <div class=" sm:pl-65">
+            <div class="grid grid-cols-12">
+                <div class="col-span-3"></div>
+                <div class="col-span-12 md:col-span-6">
+                    <div
+                        class="bg-neutral-primary-soft block  p-6 border border-default rounded-base shadow-xs hover:bg-neutral-secondary-medium">
+						<div data-th-replace="~{message::messagebox}"></div>
+						
+                        <h1 class="font-semibold pb-5 text-center"> Add New Contact</h1>
+						
+                        <form action="" 
+						   data-th-action="@{'/user/contacts/add'}"
+						   data-th-object="${contactForm}"
+						   method="post"
+						   enctype="multipart/form-data"
+						   >
+                            <!-- Name Field -->
+                            <div>
+                                <label for="input-group-1"
+                                    class="block mb-2.5 text-sm font-medium text-heading">Name...</label>
+                                <div class="relative mb-1">
+                                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                        <i class="fa-regular fa-user"></i>
+                                    </div>
+                                    <input 
+									data-th-field="*{name}"
+									type="text"
+                                        class=" block w-full ps-9 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body"
+                                        placeholder="your name.......">
+                                </div>
+                            </div>
+							<p class="text-red-500"
+							data-th-if="${#fields.hasErrors('name')}"
+							data-th-errors="*{name}"
+							></p>
+                            <!-- Email Fild -->
+                            <div>
+                                <label for="input-group-1" class="block mb-2.5 text-sm font-medium text-heading">Your
+                                    Email</label>
+                                <div class="relative mb-1">
+                                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                        <i class="fa-regular fa-envelope"></i>
+                                    </div>
+                                    <input 
+									data-th-field="*{email}"
+									type="text"
+                                        class=" block w-full ps-9 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body"
+                                        placeholder="name@flowbite.com">
+                                </div>
+                            </div>
+							
+							<p class="text-red-500"
+														data-th-if="${#fields.hasErrors('email')}"
+														data-th-errors="*{email}"
+														></p>
+							
+                            <!-- Contact Field -->
+                            <div>
+                                <label for="input-group-1"
+                                    class="block mb-2.5 text-sm font-medium text-heading">Contact</label>
+                                <div class="relative mb-1">
+                                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                        <i class="fa-regular fa-address-book"></i>
+                                    </div>
+                                    <input 
+									data-th-field="*{phoneNumber}"
+									type="text"
+                                        class="block w-full ps-9 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body"
+                                        placeholder="123456789.">
+                                </div>
+                            </div>
+								
+							<p class="text-red-500"
+														data-th-if="${#fields.hasErrors('phoneNumber')}"
+														data-th-errors="*{phoneNumber}"
+														></p>
+                            <!-- Link Field -->
+                            <div class="mb-6 flex ">
+
+                                <!-- Facebook Link -->
+                                <div class="w-full pr-2">
+                                    <label for="input-group-1"
+                                        class="block mb-2.5 text-sm font-medium text-heading">Facebook Link</label>
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                            <i class="fa-brands fa-facebook"></i>
+                                        </div>
+                                        <input
+										data-th-field="*{websiteLink}"
+										 type="text"
+                                            class="block w-full ps-9 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body"
+                                            placeholder="facebook link">
+                                    </div>
+
+                                </div>
+                                <!-- LinkedIn Link -->
+                                <div class="w-full">
+                                    <label for="input-group-1"
+                                        class="block mb-2.5 text-sm font-medium text-heading">LinkedIn Link</label>
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                            <i class="fa-brands fa-linkedin-in"></i>
+                                        </div>
+                                        <input 
+										data-th-field="*{linkedInLink}"
+										type="text"
+                                            class="block w-full ps-9 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body"
+                                            placeholder="facebook link">
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="mb-1">
+
+                                <label for="message" class="block mb-2.5 text-sm font-medium text-heading">Your
+                                    Address</label>
+                                <textarea 
+								data-th-field="*{address}"
+								 rows="4"
+                                    class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full p-3.5 shadow-xs placeholder:text-body"
+                                    placeholder="Address..."></textarea>
+
+                            </div>
+							<p class="text-red-500"
+														data-th-if="${#fields.hasErrors('address')}"
+														data-th-errors="*{address}"
+														></p>
+
+                            <div class="mb-1">
+
+                                <label for="message" class="block mb-2.5 text-sm font-medium text-heading">Your
+                                    Description</label>
+                                <textarea 
+								data-th-field="*{description}"
+								 rows="4"
+                                    class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full p-3.5 shadow-xs placeholder:text-body"
+                                    placeholder="Description..."></textarea>
+
+                            </div>
+
+                            <!-- Profile Pic -->
+
+                            <div class="mb-1">
+                                <label class="block mb-2.5 text-sm font-medium text-heading" for="file_input">Upload
+                                    file</label>
+                                <input
+								id="image_file_input"
+								th:field="*{contactImage}"
+								
+                                    class="cursor-pointer bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-half shadow-xs placeholder:text-body"
+                                    aria-describedby="file_input_help"  type="file">
+									
+									
+									<img src="" id="upload_image_preview" alt=""/>
+                            </div>
+
+
+							<p class="text-red-500"
+														th:if="${#fields.hasErrors('contactImage')}"
+														th:errors="*{contactImage}"
+														></p>
+							
+                            <!-- Checkbox... -->
+
+                            <div class="flex items-center mb-6">
+                                <input 
+								data-th-field="*{favorite}"
+								 type="checkbox" value=""
+                                    class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft">
+                                <label for="default-checkbox"
+                                    class="select-none ms-2 text-sm font-medium text-heading">Is This Contact your fabourite one ?</label>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="button-container text-center space-x-2">
+                                <button type="submit" 
+                                class="bg-blue-700 rounded  px-3 py-2 text-white hover:bg-blue-500 cursor-pointer">Add Contact</button>
+
+                                 <button class="bg-red-700 text-white rounded px-3 py-2 hover:bg-red-500 cursor-pointer">Reset</button>
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+	
+		
+<!----	<script th:src="@{/js/admin.js}"></script>-->
+	
+</body>
+
+</html>

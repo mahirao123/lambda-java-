@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html
+data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}"
+lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title> Complain_Form
+    </title>
+</head>
+
+<body class="bg-gray-200">
+
+    <div id="content" class="min-h-screen flex flex-col">
+
+
+
+		<!-- Main Content -->
+		<main
+		    class="flex-1 px-4 sm:ml-64 transition-all duration-300">
+			
+			<div class="container mx-auto px-4 py-8">
+
+			    <div class="max-w-xl mx-auto">
+
+			        <div class="bg-white rounded-xl shadow-lg">
+
+			            <!-- Header -->
+			            <div class="border-b px-6 py-4">
+			                <h2 class="text-2xl font-bold text-gray-800">
+			                    Take Complain Form Link
+			                </h2>
+			                
+			            </div>
+						<div data-th-replace="~{message::messagebox}"></div>
+			            <!-- Form -->
+			            <form th:action="@{/hr/complainLinks/add}"
+			                  th:object="${complainForm}"
+			                  method="post"
+			                  class="p-6 space-y-6">
+
+							<div>
+								<label
+		                        class="block mb-2 text-sm font-medium text-gray-900">
+		                        Form Title
+		                        <span class="text-red-500">*</span>
+		                    </label>
+
+		                    <input type="text"
+		                           th:field="*{title}"
+		                           placeholder="title"
+		                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
+							
+								   <p class="mt-1 text-sm text-red-600"
+	   			                       th:if="${#fields.hasErrors('title')}"
+	   			                       th:errors="*{title}">
+	   			                    </p>
+								
+							</div>
+
+			                <!-- Registration Link -->
+			                <div>
+			                    <label
+			                        class="block mb-2 text-sm font-medium text-gray-900">
+			                        Complain Form Link
+			                        <span class="text-red-500">*</span>
+			                    </label>
+
+			                    <input type="url"
+			                           th:field="*{complainUrl}"
+			                           placeholder="https://example.com"
+			                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
+
+			                    <p class="mt-1 text-sm text-red-600"
+			                       th:if="${#fields.hasErrors('complainUrl')}"
+			                       th:errors="*{complainUrl}">
+			                    </p>
+			                </div>
+							
+			                <!-- Result Link -->
+			                <div>
+			                    <label
+			                        class="block mb-2 text-sm font-medium text-gray-900">
+			                        Complain Result  Link
+			                        <span class="text-red-500">*</span>
+			                    </label>
+
+			                    <input type="url"
+			                           th:field="*{complainResultUrl}"
+			                           placeholder="https://formrsult.com"
+			                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
+
+			                    <p class="mt-1 text-sm text-red-600"
+			                       th:if="${#fields.hasErrors('complainResultUrl')}"
+			                       th:errors="*{complainResultUrl}">
+			                    </p>
+			                </div>
+
+			               
+
+			                <!-- Buttons -->
+			                <div class="flex  sm:flex-row gap-3 justify-center">
+			                    <button type="submit"
+			                            class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-3">
+			                        Save Link
+			                    </button>
+
+			                </div>
+
+			            </form>
+						
+						
+
+			        </div>
+					
+
+
+			    </div>
+
+			</div>
+			
+			<!-- Horizontal Scroll Container -->
+			  <div class="overflow-x-auto rounded-lg shadow border">
+
+			      <table
+			          data-th-unless="${complainPage.empty}"
+			          class="min-w-[900px] w-full bg-white">
+
+			          <thead>
+			              <tr class="text-sm bg-gray-100 border-b">
+			                  <th class="p-3 text-left">Title</th>
+							  
+			                  <th class="p-3 text-left">Complain Form Url</th>
+							  
+			                  <th class="p-3 text-left">Complain Result Url</th>
+
+			                  <th class="p-3 text-center">Action</th>
+			              </tr>
+			          </thead>
+
+			          <tbody>
+			              <tr
+			                  data-th-each="obj : ${complainPage}"
+			                  data-th-object="${obj}"
+			                  class="border-b hover:bg-gray-50 text-sm">
+
+			                  <td class="p-3" data-th-text="*{title}"></td>
+							  
+			                  <td class="p-3" data-th-text="*{complainUrl}"></td>
+							  
+			                  <td class="p-3" data-th-text="*{complainResultUrl}"></td>
+
+
+			                  <td class="p-3">
+			                      <div class="flex flex-wrap gap-2 justify-center">
+									<a
+									   
+									    data-th-href="${obj.complainUrl}"
+									    target="_blank"
+									    class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-xs sm:text-sm">
+									    Complain File
+									</a>
+									
+									<a
+									   
+									    data-th-href="${obj.complainResultUrl}"
+									    target="_blank"
+									    class="bg-blue-500 hover:bg-bluee-700 text-white px-3 py-2 rounded text-xs sm:text-sm">
+										Complain Result
+									</a>
+																												
+			                          <button
+			                              th:onclick="deleteComplain([[${obj.complainId}]])"
+			                              class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded cursor-pointer text-xs sm:text-sm">
+			                              Delete
+			                          </button>
+
+			                      </div>
+			                  </td>
+
+			              </tr>
+			          </tbody>
+
+			      </table>
+
+			  </div>
+
+			<h1
+			    data-th-if="${complainPage.empty}"
+			    class="text-center text-2xl sm:text-5xl bg-white p-6 mt-4">
+			    No Any Links Found
+			</h1>
+			
+		</main>
+
+    </div>
+
+    <script>
+        console.log("HR Dashboard Loaded");
+    </script>
+
+</body>
+
+</html>

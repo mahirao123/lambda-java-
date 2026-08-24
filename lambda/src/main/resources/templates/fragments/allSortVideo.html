@@ -1,0 +1,72 @@
+<!--- Sort Youtube Videos -->
+
+<div th:fragment="sortVideo"
+class="bg-white p-6 rounded-lg shadow my-2">
+
+	<h1 class="text-2xl font-bold  text-red-600 mb-8 ">
+		<a class="hover:text-blue-600 " data-th-href="@{'/public/moreVideos'}">Sort Videos</a>
+
+	</h1>
+
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+		<div th:each="post : ${socialMediaPage.content}"
+			th:if="${post.youtubeSortThumbnailLink != null and !#strings.isEmpty(post.youtubeSortThumbnailLink)}"
+			class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition flex flex-col min-h-[200px]">
+
+			<!-- Thumbnail -->
+			<div class="relative group">
+
+				<img th:src="${post.youtubeSortThumbnailLink}" class="w-full h-50 object-cover">
+
+				<div class="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition">
+				</div>
+
+
+				<a th:href="${post.youtubeSortLink}"
+					class="absolute inset-0 flex justify-center items-center">
+
+					<div
+						class="text-red-600 text-7xl transition-transform duration-300 group-hover:scale-110">
+						<i class="fa-brands fa-youtube"></i>
+					</div>
+
+				</a>
+
+			</div>
+
+			<!-- Content -->
+			<div class="p-5 flex flex-col flex-1">
+
+				<h2 class="text-xl font-bold line-clamp-2" th:text="${post.subject}">
+				</h2>
+
+				<p class="mt-3 text-gray-600 line-clamp-5 flex-1" th:text="${post.address}">
+				</p>
+
+				<div class="mt-5 grid grid-cols-3 gap-2">
+
+					<a th:href="${post.youtubeSortLink}" target="_blank"
+						class="bg-red-600 text-white py-2 rounded-lg text-center hover:bg-red-700">
+						YouTube
+					</a>
+
+					<a th:href="${post.instagramSortLink}" target="_blank"
+						class="bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-white py-2 rounded-lg text-center">
+						Instagram
+					</a>
+
+					<a th:href="${post.facebookSortLink}" target="_blank"
+						class="bg-blue-600 text-white py-2 rounded-lg text-center hover:bg-blue-700">
+						Facebook
+					</a>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</div>

@@ -1,0 +1,190 @@
+<div class="video-card relative aspect-video rounded-lg overflow-hidden">
+<video class="preview-video w-full h-full object-cover"
+           muted
+           loop
+           playsinline>
+        <source th:src="${video.emergencyVideo}" type="video/mp4">
+    </video>
+
+    <!-- Center Play/Pause -->
+    <button
+        type="button"
+        class="play-btn"
+        onclick="togglePlay(this)">
+
+        <i class="fa-solid fa-circle-play text-6xl text-white bg-black/40 rounded-full p-2"></i>
+
+    </button>
+
+    <!-- Mute -->
+    <button
+        type="button"
+        onclick="toggleMute(this)"
+        class="absolute bottom-3 right-3 z-30 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full">
+
+        <i class="fa-solid fa-volume-xmark"></i>
+
+    </button>
+	</div>
+	
+	.video-card{
+	    position:relative;
+	}
+
+	.play-btn{
+	    position:absolute;
+	    inset:0;
+	    display:flex;
+	    align-items:center;
+	    justify-content:center;
+	    z-index:20;
+	    opacity:1;
+	    transition:opacity .3s ease;
+	}
+
+	.play-btn.hide{
+	    opacity:0;
+	    pointer-events:none;
+	}
+	
+	
+	document.addEventListener("DOMContentLoaded", () => {
+
+	    document.querySelectorAll(".video-card").forEach(card => {
+
+	        const video = card.querySelector(".preview-video");
+	        const playBtn = card.querySelector(".play-btn");
+	        const playIcon = playBtn.querySelector("i");
+
+	        let hideTimer;
+
+	        // Track whether video was started manually
+	        video.dataset.manualPlay = "false";
+
+	        function showControls() {
+	            playBtn.classList.remove("hide");
+
+	            clearTimeout(hideTimer);
+
+	            if (!video.paused) {
+	                hideTimer = setTimeout(() => {
+	                    playBtn.classList.add("hide");
+	                }, 1500);
+	            }
+	        }
+
+	        // Hover -> Auto Play
+	        card.addEventListener("mouseenter", () => {
+
+	            if (video.paused && video.dataset.manualPlay === "false") {
+	                video.play().catch(err => console.log(err));
+	            }
+
+	            showControls();
+	        });
+
+	        // Mouse Leave -> Pause only hover-played videos
+			card.addEventListener("mouseleave", () => {
+
+			    clearTimeout(hideTimer);
+
+			    if (video.dataset.manualPlay === "false") {
+
+			        video.pause();
+
+			        playBtn.classList.remove("hide");
+
+			    } else {
+
+			        // Video is manually playing
+			        hideTimer = setTimeout(() => {
+			            playBtn.classList.add("hide");
+			        }, 1000);
+
+			    }
+
+			});
+
+	        // Mouse Move -> Show Controls
+	        card.addEventListener("mousemove", () => {
+	            showControls();
+	        });
+
+	        // Playing
+	        video.addEventListener("play", () => {
+
+	            playIcon.className =
+	                "fa-solid fa-circle-pause text-6xl text-white bg-black/40 rounded-full p-2";
+
+	            showControls();
+	        });
+
+	        // Paused
+	        video.addEventListener("pause", () => {
+
+	            clearTimeout(hideTimer);
+
+	            playBtn.classList.remove("hide");
+
+	            playIcon.className =
+	                "fa-solid fa-circle-play text-6xl text-white bg-black/40 rounded-full p-2";
+	        });
+
+	        // Ended
+	        video.addEventListener("ended", () => {
+
+	            clearTimeout(hideTimer);
+
+	            video.dataset.manualPlay = "false";
+
+	            playBtn.classList.remove("hide");
+
+	            playIcon.className =
+	                "fa-solid fa-circle-play text-6xl text-white bg-black/40 rounded-full p-2";
+	        });
+
+	    });
+
+	});
+
+
+	// ======================
+	// Play / Pause
+	// ======================
+	function togglePlay(button) {
+
+	    const card = button.closest(".video-card");
+	    const video = card.querySelector(".preview-video");
+
+	    if (video.paused) {
+
+	        video.dataset.manualPlay = "true";
+	        video.play();
+
+	    } else {
+
+	        video.dataset.manualPlay = "false";
+	        video.pause();
+
+	    }
+	}
+
+
+	// ======================
+	// Mute / Unmute
+	// ======================
+	function toggleMute(button) {
+
+	    const card = button.closest(".video-card");
+	    const video = card.querySelector(".preview-video");
+	    const icon = button.querySelector("i");
+
+	    video.muted = !video.muted;
+
+	    if (video.muted) {
+	        icon.className = "fa-solid fa-volume-xmark";
+	    } else {
+	        video.volume = 1;
+	        icon.className = "fa-solid fa-volume-high";
+	    }
+	}

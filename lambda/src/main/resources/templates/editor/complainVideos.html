@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html
+data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}"
+lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title
+        data-th-text="${loggedInEmployee != null ? loggedInEmployee.name + ' | VideoList' : 'Dashboard'}">
+        Video Table
+    </title>
+</head>
+
+<body>
+
+    <div id="content" class="min-h-screen flex flex-col">
+
+
+
+        <!-- Main Content -->
+        <main
+            class="flex-1 px-4 sm:ml-64 transition-all duration-300">
+
+			<div>
+				<h1 class="text-5xl text-center pb-2"> All Videos List</h1>
+				<form
+					      method="get"
+					      th:action="@{/editor/viewAllVideos}"
+					      class="flex gap-3 mb-6">
+
+					    <input
+					            type="text"
+					            name="keyword"
+					            th:value="${keyword}"
+					            placeholder="Search videos..."
+					            class="w-full rounded-lg border-gray-300"/>
+
+					    <button
+					            class="bg-blue-600 text-white px-6 rounded-lg cursor-pointer">
+
+					        Search
+
+					    </button>
+
+					</form>
+				
+				<div class=" w-cover ">
+					<span class="bg-blue-500 text-red-600 px-2 py-1 rounded">
+					    Total Video Posts:
+					    <span th:text="${socialMediaPage.totalElements}">0</span>
+					</span>
+				</div>
+				
+
+									
+								
+				<div class="contacts_container">
+
+
+					<div
+						class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+						
+						<div data-th-replace="~{message :: messagebox}"></div>
+						
+					
+
+						<!-- table Start -->
+						<table data-th-unless="${socialMediaPage.empty}" class="min-w-[900px] w-full bg-white">
+
+							<thead>
+								<tr class="text-sm bg-gray-100 border-b">
+									<th class="p-3 text-left">Date Time</th>
+									<th class="p-3 text-left">Title</th>
+									<th class="p-3 text-left">Address</th>
+
+									<th class="p-3 text-left">Sort Video</th>
+									<th class="p-3 text-left">Long Videos</th>
+
+									<th class="p-3 text-center">Action</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr data-th-each="obj : ${socialMediaPage}" data-th-object="${obj}"
+									class="border-b hover:bg-gray-50 text-sm">
+
+									<td class="p-3" data-th-text="*{dateTime}"></td>
+									<td class="p-3" data-th-text="*{subject}"></td>
+									<td class="p-3" data-th-text="*{address}"></td>
+
+									<td class="p-3">
+										<div class="flex item-center">
+
+											<!-- YoutubeSortLink -->
+											<a th:if="${obj.youtubeSortLink != null and !#strings.isEmpty(obj.youtubeSortLink)}"
+												th:href="${obj.youtubeSortLink}" target="_blank">
+												
+												<div class="text-red-600 text-5xl transition-transform duration-300 group-hover:scale-110">
+																    <i class="fa-brands fa-youtube mr-2"></i>
+												</div>
+											</a>
+											
+											<!-- InstagramSortLink -->
+											<a th:if="${obj.instagramSortLink != null and !#strings.isEmpty(obj.instagramSortLink)}"
+												th:href="${obj.instagramSortLink}" target="_blank">
+												
+												<div class=" text-5xl transition-transform duration-300 group-hover:scale-110">
+													<i class="fa-brands fa-instagram mr-2"></i>
+												</div>
+											</a>
+											
+											<!-- FacebookSortLink -->
+											<a th:if="${obj.facebookSortLink != null and !#strings.isEmpty(obj.facebookSortLink)}"
+												th:href="${obj.facebookSortLink}" target="_blank">
+												
+												<div class="text-blue-600 text-5xl transition-transform duration-300 group-hover:scale-110">
+												<i class="fa-brands fa-facebook mr-2"></i>
+											</div>
+											</a>
+										</div>
+									</td>
+
+
+
+
+									<td class="p-3">
+
+										<div 
+										th:if="${obj.youtubeLink != null and !#strings.isEmpty(obj.youtubeLink)}"
+										
+											class="w-48 h-28 m-1 border rounded-lg bg-gray-100 flex items-center justify-center hover:bg-gray-200 overflow-hidden">
+
+											<!-- Video -->
+											<iframe 
+											class="w-full h-full" th:src="${obj.youtubeEmbedLink}" title="YouTube video player"
+												frameborder="0"
+												allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+												allowfullscreen>
+											</iframe>
+
+										</div>
+										
+										<div th:if="${obj.emergencyVideo}"
+											class="w-48 h-28 my-2 border rounded-lg bg-gray-100 flex items-center justify-center hover:bg-gray-200 overflow-hidden">
+
+											<!-- Video -->
+											<video 
+												class="w-full h-full object-cover rounded-lg preview-video" autoplay muted loop
+												playsinline onmouseenter="this.pause()" onmouseleave="this.play()">
+												<source th:src="${obj.emergencyVideo}" type="video/mp4">
+												Your browser does not support the video tag.
+											</video>
+
+										</div>
+
+									</td>
+
+									<td class="p-3">
+										<div class="flex flex-wrap gap-2 justify-center">
+
+											<a th:href="@{/editor/updateAllVideos/{id}(id=${obj.id})}"
+												class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded text-xs sm:text-sm">
+												Update
+											</a>
+
+											<button th:onclick="deleteVideos([[${obj.id}]])"
+												class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded cursor-pointer text-xs sm:text-sm">
+												Delete
+											</button>
+
+										</div>
+									</td>
+
+								</tr>
+							</tbody>
+
+						</table>
+
+
+						
+						<div 
+						data-th-unless="${socialMediaPage.empty}"
+						class="pagination_container bg-white min-w-full py-2 text-center">
+							<nav aria-label="Page navigation example">
+								<ul class="inline-flex  text-sm">
+									<li data-th-unless="${socialMediaPage.first}">
+										<a data-th-href="@{'/editor/viewAllVideos?size='+${pageSize}+'&page='+ ${socialMediaPage.number-1}}"
+											class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border 
+								  border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-s-base text-sm px-3 h-9 
+								  focus:outline-none">Previous</a>
+									</li>
+									<li data-th-each="index : ${#numbers.sequence(0,socialMediaPage.totalPages-1)}">
+										<a data-th-href="@{'/editor/viewAllVideos?size='+${pageSize}+'&page='+${index}}"
+											data-th-classappend="${index==socialMediaPage.number?'bg-blue-600':'bg-white-600'}"
+											class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border
+								    border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium text-sm w-9 h-9 
+									focus:outline-none" data-th-text="${index+1}">1</a>
+									</li>
+
+									<li data-th-unless="${socialMediaPage.isLast}">
+										<a data-th-href="@{'/editor/viewAllVideos?size='+${pageSize}+'&page='+${socialMediaPage.number+1}}"
+											class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border 
+								  border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-e-base text-sm px-3 h-9 
+								  focus:outline-none">Next</a>
+									</li>
+								</ul>
+							</nav>
+						</div>
+						
+						
+						<h1 
+												class="text-center text-5xl bg-white p-4"
+												data-th-if="${socialMediaPage.empty}"
+												>No result found</h1>
+					</div>
+
+
+				</div>
+
+			</div>
+
+        </main>
+
+    </div>
+
+    <script>
+        console.log("HR Dashboard Loaded");
+    </script>
+
+</body>
+
+</html>

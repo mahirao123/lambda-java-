@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}" lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title data-th-text="${loggedInEmployee != null ? loggedInEmployee.name + ' | Dashboard' : 'Dashboard'}">
+		HrPage
+	</title>
+</head>
+
+<body class="bg-gray-200">
+
+	<div id="content" class="min-h-screen flex flex-col">
+
+
+		<!-- Main Content -->
+		<main class="flex-1 px-4 sm:ml-64 transition-all duration-300">
+
+			<div class="bg-white p-6 rounded-lg shadow">
+
+				<div class="min-h-screen flex items-center justify-center p-4">
+
+					<div class="w-full max-w-4xl bg-white shadow-xl rounded-2xl p-8">
+
+						<h2 class="text-3xl font-bold text-center text-blue-600 mb-5">Add SocialMedia Links</h2>
+						<div data-th-replace="message::messagebox"></div>
+						<div th:if="${error}" class=" text-red-600 text-center">
+
+							<span th:text="${error}" class="bg-red-100 mb-3"></span>
+
+						</div>
+
+						<form  data-th-action="@{'/editor/socialMediaUrls/add'}"
+							data-th-object="${socialUrlsForm}" method="post" enctype="multipart/form-data">
+
+							<!-- Link Field -->
+
+
+
+							<!-- subject -->
+							<div class="w-full pr-2">
+								<label for="input-group-1"
+									class="block mt-2.5 text-sm font-medium text-heading">Subject</label>
+								<div class="relative">
+									<input data-th-field="*{subject}" type="text"
+										class="block w-full  py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body"
+										placeholder="Subject.....">
+								</div>
+
+							</div>
+
+
+							<p class="text-red-500" data-th-if="${#fields.hasErrors('subject')}"
+								data-th-errors="*{subject}"></p>
+
+							<!-- Facebook Link -->
+							<div class="w-full pr-2">
+								<label for="input-group-1"
+									class="block mt-2.5 text-sm font-medium text-heading">Facebook Link</label>
+								<div class="relative">
+									<div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+										<i class="fa-brands fa-facebook"></i>
+									</div>
+									<input data-th-field="*{facebookSortLink}" type="url"
+										class="block w-full ps-9 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body"
+										placeholder="facebook Sort Video link.....">
+								</div>
+
+							</div>
+							<p class="text-red-500" data-th-if="${#fields.hasErrors('facebookSortLink')}"
+								data-th-errors="*{facebookSortLink}"></p>
+
+							<!-- Instagram Link -->
+							<div class="w-full pr-2">
+								<label for="input-group-1"
+									class="block mt-2.5 text-sm font-medium text-heading">Instagram Link</label>
+								<div class="relative">
+									<div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+										<i class="fa-brands fa-instagram"></i>
+									</div>
+									<input data-th-field="*{instagramSortLink}" type="url"
+										class="block w-full ps-9 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body"
+										placeholder="instagram Sort Video link.....">
+								</div>
+
+							</div>
+							<p class="text-red-500" data-th-if="${#fields.hasErrors('instagramSortLink')}"
+								data-th-errors="*{instagramSortLink}"></p>
+
+
+							<!-- Youtube Link -->
+							<div class="w-full pr-2">
+								<label for="input-group-1" class="block mt-2.5 text-sm font-medium text-heading">Youtube
+									Sort
+									Video</label>
+								<div class="relative">
+									<div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+										<i class="fa-brands fa-youtube"></i>
+									</div>
+									<input data-th-field="*{youtubeSortLink}" type="url"
+										class="block w-full ps-9 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body"
+										placeholder="youtube Sort Video link.....">
+								</div>
+
+							</div>
+
+							<!-- Youtube Sort Video Link -->
+							<div class="w-full pr-2">
+								<label for="input-group-1" class="block mt-2.5 text-sm font-medium text-heading">Youtube
+									Long Video
+									Link</label>
+								<div class="relative">
+									<div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+										<i class="fa-solid fa-link"></i>
+									</div>
+									<input data-th-field="*{youtubeLink}" type="url"
+										class="block w-full ps-9 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body"
+										placeholder="youtubeLink  .....">
+								</div>
+
+								<!-- Emergency Video -->
+
+								<div class="w-full pr-2">
+									<label for="emergencyVideo" class="block mt-2.5 text-sm font-medium text-heading">
+										Upload Video
+									</label>
+
+									<div class="relative">
+										<input  type="file" 
+										data-th-field="*{emergencyVideo}"
+											accept="video/*"
+											class="block w-full text-sm text-heading border border-default-medium rounded-base 
+											cursor-pointer bg-neutral-secondary-medium focus:outline-none focus:ring-brand focus:border-brand 
+											shadow-xs file:mr-4 file:py-2 file:px-4 file:rounded-l-base file:border-0 file:text-sm file:font-semibold
+											 file:bg-brand file:text-white hover:file:bg-brand-dark" 
+											 placeholder="Upload Video to clodinary.."/>
+									</div>
+
+									<!-- Validation Error -->
+									<p class="mt-1 text-sm text-red-600" th:if="${#fields.hasErrors('emergencyVideo')}"
+										th:errors="*{emergencyVideo}">
+									</p>
+								</div>
+
+
+
+
+								<!-- Address -->
+								<div class="w-full pr-2">
+									<label for="input-group-1"
+										class="block mt-2.5 text-sm font-medium text-heading">Address</label>
+									<div class="relative">
+										<div
+											class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+
+										</div>
+										<input data-th-field="*{address}" type="text"
+											class="block w-full  pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body"
+											placeholder="Address.....">
+									</div>
+
+								</div>
+
+
+								<p class="text-red-500" data-th-if="${#fields.hasErrors('address')}"
+									data-th-errors="*{address}"></p>
+
+
+								<!-- Buttons -->
+								<div class="text-center">
+									<button type="submit"
+										class="text-white bg-blue-500 hover:bg-blue-800 rounded-lg text-sm px-8 py-3 mt-2">
+										AddLinks
+									</button>
+								</div>
+
+						</form>
+
+					</div>
+
+				</div>
+			</div>
+
+		</main>
+
+	</div>
+
+	<script>
+		console.log("HR Dashboard Loaded");
+	</script>
+
+</body>
+
+</html>

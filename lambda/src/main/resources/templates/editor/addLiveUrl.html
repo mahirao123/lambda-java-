@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}" lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title data-th-text="${loggedInEmployee != null ? loggedInEmployee.name + ' | liveUrlForm' : 'liveUrlForm'}">
+		LiveUrlForm
+	</title>
+</head>
+
+<body class="bg-gray-200">
+
+	<div id="content" class="min-h-screen flex flex-col">
+
+
+		<!-- Main Content -->
+		<main class="flex-1 px-4 sm:ml-64 transition-all duration-300">
+
+			<div class="bg-white p-6 rounded-lg shadow">
+
+				<div class="min-h-screen flex items-center justify-center p-4">
+
+					<div class="w-full max-w-4xl bg-white shadow-xl rounded-2xl p-8">
+
+						<h2 class="text-3xl font-bold text-center text-blue-600 mb-5">Add Live Url </h2>
+						<div data-th-replace="message::messagebox"></div>
+						<div th:if="${error}" class=" text-red-600 text-center">
+
+							<span th:text="${error}" class="bg-red-100 mb-3"></span>
+
+						</div>
+
+						<form th:action="@{/editor/liveUrl/add}"
+						      th:object="${liveForm}"
+						      method="post"
+						      >
+
+						    <!-- URL -->
+						    <div class="mb-5">
+						        <label for="url"
+						               class="block mb-2 text-sm font-medium text-gray-900">
+						            URL
+						        </label>
+
+						        <input
+						            type="url"
+						            id="url"
+						            th:field="*{liveUrl}"
+						            placeholder="https://example.com"
+						            class="w-full px-4 py-3 border border-gray-300 rounded-lg
+						                   focus:ring-blue-500 focus:border-blue-500"
+						        />
+
+						        <p th:if="${#fields.hasErrors('liveUrl')}"
+						           th:errors="*{liveUrl}"
+						           class="mt-1 text-sm text-red-600">
+						        </p>
+						    </div>
+
+
+
+						    <!-- Buttons -->
+						    <div class="text-center gap-3">
+
+						        <button
+						            type="submit"
+						            class="px-6 py-3 text-white bg-blue-600 rounded-lg
+						             cursor-pointer  hover:bg-blue-700 focus:ring-4 focus:ring-blue-300">
+						            Save
+						        </button>
+
+								<a
+								    th:href="@{/editor/viewLiveUrl}"
+								    class="px-6 py-3 text-gray-900 bg-gray-200 rounded-lg
+								           hover:bg-gray-300">
+								    Cancel
+								</a>
+						    </div>
+
+						</form>
+
+					</div>
+
+				</div>
+			</div>
+
+		</main>
+
+	</div>
+
+	<script>
+		console.log("HR Dashboard Loaded");
+	</script>
+
+</body>
+
+</html>

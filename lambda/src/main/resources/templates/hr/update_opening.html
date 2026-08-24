@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html
+data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}"
+lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title
+        data-th-text="${loggedInEmployee != null ? loggedInEmployee.name + ' | Dashboard' : 'Dashboard'}">
+        HrPage
+    </title>
+</head>
+
+<body class="bg-gray-200">
+
+    <div id="content" class="min-h-screen flex flex-col">
+
+
+
+        <!-- Main Content -->
+        <main
+            class="flex-1 px-4 sm:ml-64 transition-all duration-300">
+			
+			<div class="container mx-auto px-4 py-8">
+
+			    <div class="max-w-xl mx-auto">
+
+			        <div class="bg-white rounded-xl shadow-lg">
+
+			            <!-- Header -->
+			            <div class="border-b px-6 py-4">
+			                <h2 class="text-2xl font-bold text-gray-800">
+			                    Create Job Opening
+			                </h2>
+			                <p class="text-gray-500 mt-1">
+			                    Fill the details below to create a new opening.
+			                </p>
+			            </div>
+						<div data-th-replace="~{message::messagebox}"></div>
+			            <!-- Form -->
+			            <form th:action="@{'/hr/update_openings/'+${id}}"
+			                  th:object="${openingForm}"
+			                  method="post"
+			                  class="p-6 space-y-6">
+
+			                <!-- Role -->
+			                <div>
+			                    <label
+			                        class="block mb-2 text-sm font-medium text-gray-900">
+			                        Role <span class="text-red-500">*</span>
+			                    </label>
+
+			                    <input type="text"
+			                           th:field="*{role}"
+			                           placeholder="Enter role name"
+			                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
+
+			                    <p class="mt-1 text-sm text-red-600"
+			                       th:if="${#fields.hasErrors('role')}"
+			                       th:errors="*{role}">
+			                    </p>
+			                </div>
+
+			                <!-- Registration Link -->
+			                <div>
+			                    <label
+			                        class="block mb-2 text-sm font-medium text-gray-900">
+			                        Registration Link
+			                        <span class="text-red-500">*</span>
+			                    </label>
+
+			                    <input type="url"
+			                           th:field="*{link}"
+			                           placeholder="https://example.com"
+			                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
+
+			                    <p class="mt-1 text-sm text-red-600"
+			                       th:if="${#fields.hasErrors('link')}"
+			                       th:errors="*{link}">
+			                    </p>
+			                </div>
+
+			                <!-- Dates -->
+			                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+			                    <!-- Start Date -->
+			                    <div>
+			                        <label
+			                            class="block mb-2 text-sm font-medium text-gray-900">
+			                            Start Date
+			                            <span class="text-red-500">*</span>
+			                        </label>
+
+			                        <input type="date"
+			                               th:field="*{startDate}"
+			                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
+
+			                        <p class="mt-1 text-sm text-red-600"
+			                           th:if="${#fields.hasErrors('startDate')}"
+			                           th:errors="*{startDate}">
+			                        </p>
+			                    </div>
+
+			                    <!-- End Date -->
+			                    <div>
+			                        <label
+			                            class="block mb-2 text-sm font-medium text-gray-900">
+			                            End Date
+			                        </label>
+
+			                        <input type="date"
+			                               th:field="*{endDate}"
+			                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
+			                    </div>
+
+			                </div>
+
+			                <!-- About -->
+			                <div>
+			                    <label
+			                        class="block mb-2 text-sm font-medium text-gray-900">
+			                        About Opening
+			                    </label>
+
+			                    <textarea rows="5"
+			                              th:field="*{about}"
+			                              placeholder="Write something about this opening..."
+			                              class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>
+			                </div>
+
+			                <!-- Buttons -->
+			                <div class="flex  sm:flex-row gap-3 justify-center">
+
+			                    <button type="submit"
+			                            class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-3 cursor-pointer">
+			                        Update Opening
+			                    </button>
+
+			                </div>
+
+			            </form>
+
+			        </div>
+
+			    </div>
+
+			</div>
+
+        </main>
+
+    </div>
+
+    <script>
+        console.log("HR Dashboard Loaded");
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,112 @@
+<nav
+    data-th-fragment="commonEmployeeNavbar"
+    class="bg-white dark:bg-gray-900
+           fixed top-0 left-0
+           w-full
+           z-50
+           border-b border-gray-200
+           dark:border-gray-600
+           sm:pl-64">
+
+    <div class="max-w-screen-xl
+                flex items-center
+                justify-between
+                mx-auto
+                p-3">
+
+        <!-- Mobile menu button -->
+        <button
+            type="button"
+            data-drawer-target="logo-sidebar"
+            data-drawer-toggle="logo-sidebar"
+            aria-controls="logo-sidebar"
+            aria-expanded="false"
+            class="inline-flex items-center
+                   p-2
+                   text-sm
+                   text-gray-500
+                   rounded-lg
+                   sm:hidden
+                   hover:bg-gray-100
+                   focus:outline-none
+                   focus:ring-2
+                   focus:ring-gray-200">
+
+            <span class="sr-only">
+                Open sidebar
+            </span>
+
+            <svg
+                class="w-6 h-6"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg">
+
+                <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+                </path>
+
+            </svg>
+        </button>
+
+
+        <!-- Logo -->
+        <a class="flex items-center space-x-3">
+
+            <img
+                data-th-src="@{'/images/raj.jpeg'}"
+                class="h-8 rounded-full"
+                alt="Lambda">
+
+            <span class="text-2xl font-semibold whitespace-nowrap">
+                Lambda
+            </span>
+
+        </a>
+
+
+        <!-- User + Logout -->
+        <div class="flex items-center gap-2 ml-auto">
+
+            <span
+                class="inline-flex items-center
+                       whitespace-nowrap
+                       text-white
+                       bg-green-700
+                       rounded-lg
+                       text-sm
+                       px-4 py-2">
+
+                <i class="fa-solid fa-user mr-2"></i>
+
+                <span data-th-text="${loggedInEmployee.name}">
+                    Employee
+                </span>
+
+            </span>
+
+
+            <a
+                th:href="@{'/employee/logout'}"
+                class="inline-flex items-center
+                       whitespace-nowrap
+                       text-white
+                       bg-red-700
+                       hover:bg-red-800
+                       rounded-lg
+                       text-sm
+                       px-4 py-2">
+
+                <i class="fa-solid fa-right-from-bracket mr-2"></i>
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
