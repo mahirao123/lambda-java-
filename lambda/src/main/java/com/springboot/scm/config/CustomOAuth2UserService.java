@@ -14,7 +14,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import com.springboot.scm.entitis.User;
+import com.springboot.scm.entities.User;
 import com.springboot.scm.repositories.UserRepo;
 
 @Service

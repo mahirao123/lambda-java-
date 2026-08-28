@@ -49,13 +49,15 @@ public class EmployeeForm {
     )
     private String phoneNumber;
 
+    
     @NotBlank(message = "Password is required",
             groups = {CreateGroup.class})
     @Pattern(
             regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,16}$",
             message = "Password must contain uppercase, lowercase, number, special character and be 8-16 characters long"
     )
-    private String password;
+    
+     private String password;
 
     @NotBlank(message = "Role is required")
     private String role;

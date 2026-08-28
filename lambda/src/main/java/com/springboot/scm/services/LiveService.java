@@ -2,7 +2,7 @@ package com.springboot.scm.services;
 
 import java.util.List;
 
-import com.springboot.scm.entitis.Live;
+import com.springboot.scm.entities.Live;
 
 public interface LiveService {
 	

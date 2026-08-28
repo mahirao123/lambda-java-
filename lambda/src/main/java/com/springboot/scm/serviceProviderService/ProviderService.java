@@ -2,7 +2,7 @@ package com.springboot.scm.serviceProviderService;
 
 import java.util.List;
 
-import com.springboot.scm.entitis.ServiceProviderLogin;
+import com.springboot.scm.entities.ServiceProviderLogin;
 
 public interface ProviderService {
 	

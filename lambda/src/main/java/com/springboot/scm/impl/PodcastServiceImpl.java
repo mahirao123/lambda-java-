@@ -12,7 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.springboot.scm.entitis.Podcast;
+import com.springboot.scm.entities.Podcast;
 import com.springboot.scm.repositories.PodcastRepo;
 import com.springboot.scm.services.PodcastService;
 
@@ -22,6 +22,11 @@ public class PodcastServiceImpl implements PodcastService{
 	@Autowired
 	private PodcastRepo podcastRepo;
 	
+
+    // =========================================================
+    // UPDATE STATUS OF ONE PODCAST
+    // =========================================================
+
     private void updatePodcastStatus(Podcast podcast) {
 
         if (podcast.getDate() == null) {
@@ -30,19 +35,35 @@ public class PodcastServiceImpl implements PodcastService{
         }
 
         LocalDate today = LocalDate.now();
+
         LocalDate podcastDate = podcast.getDate().toLocalDate();
 
+
+        // Date already passed
         if (podcastDate.isBefore(today)) {
+
             podcast.setEnable("End");
 
-        } else if (podcastDate.isAfter(today)) {
+        }
+
+        // Future date
+        else if (podcastDate.isAfter(today)) {
+
             podcast.setEnable("Upcoming");
 
-        } else {
+        }
+
+        // Today's date
+        else {
+
             podcast.setEnable("Running");
         }
     }
 
+
+    // =========================================================
+    // SAVE PODCAST
+    // =========================================================
 
     @Override
     public Podcast savePodcast(Podcast podcast) {
@@ -53,6 +74,10 @@ public class PodcastServiceImpl implements PodcastService{
     }
 
 
+    // =========================================================
+    // UPDATE PODCAST
+    // =========================================================
+
     @Override
     public Podcast updatePodcast(Podcast podcast) {
 
@@ -62,18 +87,40 @@ public class PodcastServiceImpl implements PodcastService{
     }
 
 
+    // =========================================================
+    // AUTOMATICALLY UPDATE EVERY MIDNIGHT
+    // INDIA TIME
+    // =========================================================
+
     @Override
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(
+        cron = "0 0 0 * * *",
+        zone = "Asia/Kolkata"
+    )
     public void updatePodcastStatuses() {
+
+        System.out.println("======================================");
+        System.out.println("Updating Podcast Statuses...");
+        System.out.println("Today: " + LocalDate.now());
+        System.out.println("======================================");
 
         List<Podcast> podcasts = podcastRepo.findAll();
 
         for (Podcast podcast : podcasts) {
+
             updatePodcastStatus(podcast);
+
+            System.out.println(
+                "Podcast ID: " + podcast.getId()
+                + " | Date: " + podcast.getDate()
+                + " | Status: " + podcast.getEnable()
+            );
         }
 
         podcastRepo.saveAll(podcasts);
-    }	
+
+        System.out.println("Podcast statuses updated successfully.");
+    }
 
 	
 	

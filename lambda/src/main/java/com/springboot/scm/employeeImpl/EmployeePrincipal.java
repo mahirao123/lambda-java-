@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.springboot.scm.employeeEntitis.EmployeeDetails;
+import com.springboot.scm.employeeEntities.EmployeeDetails;
 
 public class EmployeePrincipal implements UserDetails {
 

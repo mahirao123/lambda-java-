@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.springboot.scm.employeeEntitis.EmployeeDetails;
+import com.springboot.scm.employeeEntities.EmployeeDetails;
 
 @Repository
 public interface EmployeeRepo extends JpaRepository<EmployeeDetails,String> {

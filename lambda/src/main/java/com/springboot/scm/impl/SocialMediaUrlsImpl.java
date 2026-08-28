@@ -11,8 +11,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import org.springframework.util.StringUtils;
-import com.springboot.scm.employeeEntitis.EmployeeDetails;
-import com.springboot.scm.entitis.SocialMediaUrls;
+
+import com.springboot.scm.employeeEntities.EmployeeDetails;
+import com.springboot.scm.entities.SocialMediaUrls;
 import com.springboot.scm.repositories.SocialMediaUrlsRepo;
 import com.springboot.scm.services.SocialMediaUrlsService;
 import com.springboot.scm.util.SocialMediaUrlUtil;

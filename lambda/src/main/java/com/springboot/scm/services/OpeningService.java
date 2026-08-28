@@ -3,7 +3,7 @@ package com.springboot.scm.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.springboot.scm.entitis.Opening;
+import com.springboot.scm.entities.Opening;
 
 public interface OpeningService {
 

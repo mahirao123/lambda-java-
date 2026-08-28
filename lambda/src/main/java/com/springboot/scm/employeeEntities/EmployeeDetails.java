@@ -1,4 +1,4 @@
-package com.springboot.scm.employeeEntitis;
+package com.springboot.scm.employeeEntities;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -9,9 +9,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.springboot.scm.entitis.SocialMediaUrls;
+import com.springboot.scm.entities.Article;
+import com.springboot.scm.entities.SocialMediaUrls;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -83,24 +83,34 @@ public class EmployeeDetails
     private String expCloudinaryId;
     private String panCloudinaryId;
     
+   
     private String mediaType;
     
-    // Relation with SocialMediaUrls
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @Builder.Default 
-    private List<SocialMediaUrls> socialMediaUrls=new ArrayList<>();
-
+    // Relation with SocialMediaUrls,socialMediaUrls still visible even if employee deleted
+    @OneToMany(
+    	    mappedBy = "employee",
+    	    fetch = FetchType.LAZY
+    	)
+    	@Builder.Default
+    	private List<SocialMediaUrls> socialMediaUrls = new ArrayList<>();
+    
+  //Article still visible even if employee deleted
+    @OneToMany(
+            mappedBy = "author",
+            fetch = FetchType.LAZY
+    )
+    @Builder.Default
+    private List<Article> articles = new ArrayList<>();   
     
     
-    @Override
-    public Collection<? extends GrantedAuthority>
-    getAuthorities() {
+    
+    
+    
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        return List.of(
-                new SimpleGrantedAuthority(
-                        role)
-        );
-    }
+		return List.of(new SimpleGrantedAuthority(role));
+	}
 
     @Override
     public String getPassword() {

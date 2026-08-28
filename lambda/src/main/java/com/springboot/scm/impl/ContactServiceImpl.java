@@ -9,8 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.springboot.scm.entitis.Contact;
-import com.springboot.scm.entitis.User;
+import com.springboot.scm.entities.Contact;
+import com.springboot.scm.entities.User;
 import com.springboot.scm.helpers.ResourceNotFoundException;
 import com.springboot.scm.repositories.ContactRepo;
 import com.springboot.scm.services.ContactService;

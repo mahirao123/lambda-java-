@@ -10,8 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.springboot.scm.employeeEntitis.EmployeeDetails;
-import com.springboot.scm.entitis.SocialMediaUrls;
+import com.springboot.scm.employeeEntities.EmployeeDetails;
+import com.springboot.scm.entities.SocialMediaUrls;
 
 @Repository
 public interface SocialMediaUrlsRepo extends JpaRepository<SocialMediaUrls,String> {

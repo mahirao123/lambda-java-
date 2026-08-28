@@ -8,25 +8,14 @@ lang="en">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title
-        data-th-text="${loggedInEmployee != null ? loggedInEmployee.name + ' | Dashboard' : 'Dashboard'}">
-        HrPage
+        data-th-text="${loggedInEmployee != null ? loggedInEmployee.name + ' | EmployeeRegistration' : 'EmployeeRegistration'}">
+        EmployeeRegistration Page
     </title>
 </head>
 
 <body class="bg-gray-200">
 
     <div id="content" class="min-h-screen flex flex-col">
-
-        <!-- Sidebar + Navbar -->
-        <div th:if="${loggedInEmployee != null}">
-
-            <!-- Sidebar -->
-            <div th:replace="~{hr/sidebar :: hrsidebar}"></div>
-
-            <!-- Navbar -->
-            <div th:replace="~{hr/navbar :: hrnavbar}"></div>
-
-        </div>
 
         <!-- Main Content -->
         <main
@@ -99,20 +88,41 @@ lang="en">
                class="text-red-600 text-sm mt-1"></p>
         </div>
 
-        <!-- Password -->
-        <div>
-            <label class="block mb-2 text-sm font-medium">
-                Password
-            </label>
+<!-- Password -->
+<div>
 
-            <input type="password"
-                   th:field="*{password}"
-                   placeholder="Enter password"
-                   class="bg-gray-50 border border-gray-300 text-sm rounded-lg block w-full p-3">
+    <label for="password"
+           class="block mb-2 text-sm font-medium text-gray-700">
+        Password
+    </label>
 
-            <p th:errors="*{password}"
-               class="text-red-600 text-sm mt-1"></p>
-        </div>
+    <div class="relative">
+
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm
+                   rounded-lg focus:ring-blue-500 focus:border-blue-500
+                   block w-full p-2.5 pr-12" />
+
+        <!-- Eye Toggle Button -->
+        <button
+            type="button"
+            id="togglePassword"
+            class="absolute right-0 top-0 h-full px-3
+                   text-gray-500 hover:text-gray-700
+                   focus:outline-none"
+            aria-label="Show password">
+
+            <i id="passwordEye" class="fa-solid fa-eye"></i>
+
+        </button>
+
+    </div>
+
+</div>
 
         <!-- Role -->
         <div>

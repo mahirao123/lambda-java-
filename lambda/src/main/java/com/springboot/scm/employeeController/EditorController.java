@@ -1,12 +1,17 @@
 package com.springboot.scm.employeeController;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,17 +19,24 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.springboot.scm.employeeEntitis.EmployeeDetails;
-import com.springboot.scm.entitis.Complain;
-import com.springboot.scm.entitis.Live;
-import com.springboot.scm.entitis.Slider;
-import com.springboot.scm.entitis.SlidingText;
-import com.springboot.scm.entitis.SocialMediaUrls;
+import com.springboot.scm.employeeEntities.EmployeeDetails;
+import com.springboot.scm.employeeServices.EmployeeService;
+import com.springboot.scm.entities.Article;
+import com.springboot.scm.entities.Complain;
+import com.springboot.scm.entities.ContentCategory;
+import com.springboot.scm.entities.ContentSubCategory;
+import com.springboot.scm.entities.Live;
+import com.springboot.scm.entities.Slider;
+import com.springboot.scm.entities.SlidingText;
+import com.springboot.scm.entities.SocialMediaUrls;
+import com.springboot.scm.forms.ArticleForm;
 import com.springboot.scm.forms.LiveForm;
 import com.springboot.scm.forms.OpeningForm;
 import com.springboot.scm.forms.SliderForm;
@@ -35,7 +47,10 @@ import com.springboot.scm.helpers.EmployeeHelper;
 import com.springboot.scm.helpers.Message;
 import com.springboot.scm.helpers.MessageType;
 import com.springboot.scm.helpers.ResourceNotFoundException;
+import com.springboot.scm.services.ArticleService;
 import com.springboot.scm.services.ComplainService;
+import com.springboot.scm.services.ContentCategoryService;
+import com.springboot.scm.services.ContentSubCategoryService;
 import com.springboot.scm.services.ImageService;
 import com.springboot.scm.services.LiveService;
 import com.springboot.scm.services.SliderService;
@@ -50,7 +65,7 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/editor")
-public class EditorController {
+public class EditorController<subCategoryService> {
 	
 	@Autowired
 	private SliderService sliderService;
@@ -69,6 +84,18 @@ public class EditorController {
 	
 	@Autowired
 	private LiveService liveService;
+	
+	@Autowired
+	private EmployeeService employeeService;
+	
+	@Autowired
+	private ArticleService articleService;
+	
+	@Autowired
+	private  ContentCategoryService categoryService;
+	
+	@Autowired
+	private ContentSubCategoryService subCategoryService;
 	
 	@RequestMapping("/dashboard")
 	public String editorDashboard(Model model) {
@@ -197,7 +224,6 @@ public class EditorController {
 	String type=slider.getMediaType();
 	String cloudinaryId=slider.getCloudinaryId();
 	
-	System.out.println("Media Type "+type+"cloudinaryId  "+cloudinaryId);
 	
 	cloudinaryService.deleteCloudinaryFile(cloudinaryId, type);
 	
@@ -304,6 +330,7 @@ public class EditorController {
 	try {
 		EmployeeDetails employee=EmployeeHelper.getLoggedInEmployee();
 		media.setEmployee(employee);
+		media.setPostedBy(employee.getName());
 	} catch (Exception e) {
 		
 		e.printStackTrace();
@@ -339,6 +366,7 @@ public class EditorController {
 	media.setInstagramSortLink(socialMediaUrlsForm.getInstagramSortLink());
 	media.setYoutubeSortLink(socialMediaUrlsForm.getYoutubeSortLink());
 	media.setYoutubeLink(socialMediaUrlsForm.getYoutubeLink());
+	
 	
 	
 	try {
@@ -732,4 +760,518 @@ public String deleteLiveUrl(@PathVariable Long id,HttpSession session) {
 	
 }
 
+  
+// ======================================================
+// CATEGORY PAGE
+// ======================================================
+
+@GetMapping("/ourAims/category")
+public String aimsCategoryPage(Model model) {
+
+    model.addAttribute(
+            "categories",
+            categoryService.getAll()
+    );
+
+    model.addAttribute(
+            "category",
+            new ContentCategory()
+    );
+
+    return "editor/content-category";
+}
+
+
+// ======================================================
+// ADD CATEGORY
+// ======================================================
+
+// ======================================================
+// ADD CATEGORY
+// ======================================================
+
+@PostMapping("/category/add")
+public String addAimsCategory(
+        @RequestParam("date") Date date,
+        @RequestParam("day") String day) {
+
+    if (date != null
+            && day != null
+            && !day.trim().isEmpty()) {
+
+        ContentCategory category =
+                ContentCategory.builder()
+                        .date(date)
+                        .day(day.trim())
+                        .build();
+
+        categoryService.save(category);
+    }
+
+    return "redirect:/editor/ourAims/category";
+}
+
+
+// ======================================================
+// UPDATE CATEGORY
+// ======================================================
+
+@PostMapping("/category/update")
+public String updateAimsCategory(
+        @RequestParam("id") Long id,
+        @RequestParam("date") Date date,
+        @RequestParam("day") String day) {
+
+    ContentCategory category =
+            categoryService.findById(id);
+
+    if (category == null) {
+
+        throw new RuntimeException(
+                "Category not found with id: " + id
+        );
+    }
+
+
+    // UPDATE DATE
+
+    if (date != null) {
+
+        category.setDate(date);
+    }
+
+
+    // UPDATE DAY
+
+    if (day != null
+            && !day.trim().isEmpty()) {
+
+        category.setDay(day.trim());
+    }
+
+
+    categoryService.save(category);
+
+
+    return "redirect:/editor/ourAims/category";
+}
+
+// ======================================================
+// ADD SUBCATEGORY
+// ======================================================
+
+@PostMapping("/category/subcategory/add")
+public String addAimsSubCategory(
+        @RequestParam("categoryId") Long categoryId,
+        @RequestParam("name") String name) {
+
+    if (name != null
+            && !name.trim().isEmpty()) {
+
+        ContentCategory category =
+                categoryService.findById(categoryId);
+
+
+        if (category == null) {
+
+            throw new RuntimeException(
+                    "Category not found with id: "
+                    + categoryId
+            );
+        }
+
+
+        ContentSubCategory subCategory =
+                ContentSubCategory.builder()
+                        .name(name.trim())
+                        .category(category)
+                        .build();
+
+
+        subCategoryService.saveSubCategory(
+                subCategory
+        );
+    }
+
+
+    return "redirect:/editor/ourAims/category";
+}
+
+
+// ======================================================
+// UPDATE SUBCATEGORY
+// ======================================================
+
+@PostMapping("/category/subcategory/update")
+public String updateAimsSubCategory(
+        @RequestParam("id") Long id,
+        @RequestParam("name") String name) {
+
+
+    Optional<ContentSubCategory> optionalSubCategory =
+            subCategoryService.getById(id);
+
+
+    if (optionalSubCategory.isEmpty()) {
+
+        throw new RuntimeException(
+                "Subcategory not found with id: " + id
+        );
+    }
+
+
+    ContentSubCategory subCategory =
+            optionalSubCategory.get();
+
+
+    if (name != null
+            && !name.trim().isEmpty()) {
+
+        subCategory.setName(
+                name.trim()
+        );
+    }
+
+
+    subCategoryService.saveSubCategory(
+            subCategory
+    );
+
+
+    return "redirect:/editor/ourAims/category";
+}
+
+
+// ======================================================
+// GET SUBCATEGORIES BY CATEGORY
+// ======================================================
+
+@GetMapping("/category/subcategories/{categoryId}")
+@ResponseBody
+public List<Map<String, Object>> getSubCategories(
+        @PathVariable("categoryId") Long categoryId) {
+
+
+    List<ContentSubCategory> subCategories =
+            subCategoryService
+                    .getByCategoryId(
+                            categoryId
+                    );
+
+
+    return subCategories
+            .stream()
+            .map(sub -> {
+
+                Map<String, Object> map =
+                        new HashMap<>();
+
+
+                map.put(
+                        "id",
+                        sub.getId()
+                );
+
+
+                map.put(
+                        "name",
+                        sub.getName()
+                );
+
+
+                return map;
+
+            })
+            .toList();
+}
+
+
+// ======================================================
+// DELETE CATEGORY
+// ======================================================
+
+@GetMapping("/category/delete/{id}")
+public String deleteCategory(
+        @PathVariable("id") Long id) {
+
+
+    ContentCategory category =
+            categoryService.findById(id);
+
+
+    if (category == null) {
+
+        throw new RuntimeException(
+                "Category not found with id: " + id
+        );
+    }
+
+
+    categoryService.delete(id);
+
+
+    return "redirect:/editor/ourAims/category";
+}
+
+
+// ======================================================
+// DELETE SUBCATEGORY
+// ======================================================
+
+@GetMapping("/category/subcategory/delete/{id}")
+public String deleteSbCategory(
+        @PathVariable("id") Long id) {
+
+
+    Optional<ContentSubCategory> optionalSubCategory =
+            subCategoryService.getById(id);
+
+
+    if (optionalSubCategory.isEmpty()) {
+
+        throw new RuntimeException(
+                "Subcategory not found with id: " + id
+        );
+    }
+
+
+    subCategoryService.deleteSubCategory(id);
+
+
+    return "redirect:/editor/ourAims/category";
+}
+
+
+
+// ======================================================
+// ADD ARTICLE PAGE
+// ======================================================
+
+@GetMapping("/article/add")
+public String addArticlePage(Model model) {
+
+    model.addAttribute(
+            "articleForm",
+            new ArticleForm()
+    );
+
+    model.addAttribute(
+            "categories",
+            categoryService.getAll()
+    );
+
+    return "editor/add-article";
+}
+
+
+// ======================================================
+// SAVE ARTICLE
+// ======================================================
+
+@PostMapping("/article/save")
+public String saveArticle(
+        @Validated @ModelAttribute("articleForm") ArticleForm form,
+        BindingResult bindingResult,
+        Authentication authentication,
+        Model model) throws IOException {
+
+    // -----------------------------------------------
+    // VALIDATION ERROR
+    // -----------------------------------------------
+
+    if (bindingResult.hasErrors()) {
+
+        model.addAttribute(
+                "categories",
+                categoryService.getAll()
+        );
+
+        // IMPORTANT:
+        // Load subcategories again when validation fails
+        if (form.getCategoryId() != null) {
+
+            model.addAttribute(
+                    "subCategories",
+                    subCategoryService
+                            .getByCategoryId(
+                                    form.getCategoryId()
+                            )
+            );
+        }
+
+        return "editor/add-article";
+    }
+
+
+    // -----------------------------------------------
+    // CHECK CATEGORY
+    // -----------------------------------------------
+
+    if (form.getCategoryId() == null) {
+
+        bindingResult.rejectValue(
+                "categoryId",
+                "category.required",
+                "Please select a category"
+        );
+
+        model.addAttribute(
+                "categories",
+                categoryService.getAll()
+        );
+
+        return "editor/add-article";
+    }
+
+
+    // -----------------------------------------------
+    // CHECK SUBCATEGORY
+    // -----------------------------------------------
+
+    if (form.getSubCategoryId() == null) {
+
+        bindingResult.rejectValue(
+                "subCategoryId",
+                "subcategory.required",
+                "Please select a subcategory"
+        );
+
+        model.addAttribute(
+                "categories",
+                categoryService.getAll()
+        );
+
+        model.addAttribute(
+                "subCategories",
+                subCategoryService
+                        .getByCategoryId(
+                                form.getCategoryId()
+                        )
+        );
+
+        return "editor/add-article";
+    }
+
+
+    // -----------------------------------------------
+    // GET SUBCATEGORY
+    // -----------------------------------------------
+
+    ContentSubCategory subCategory =
+            subCategoryService
+                    .getById(form.getSubCategoryId())
+                    .orElseThrow(() ->
+                            new RuntimeException(
+                                    "SubCategory not found"
+                            )
+                    );
+
+
+    // -----------------------------------------------
+    // VERIFY SUBCATEGORY BELONGS TO CATEGORY
+    // -----------------------------------------------
+
+    if (subCategory.getCategory() == null ||
+            !subCategory.getCategory()
+                    .getId()
+                    .equals(form.getCategoryId())) {
+
+        bindingResult.rejectValue(
+                "subCategoryId",
+                "subcategory.invalid",
+                "Selected subcategory does not belong to selected category"
+        );
+
+        model.addAttribute(
+                "categories",
+                categoryService.getAll()
+        );
+
+        model.addAttribute(
+                "subCategories",
+                subCategoryService
+                        .getByCategoryId(
+                                form.getCategoryId()
+                        )
+        );
+
+        return "editor/add-article";
+    }
+
+
+    // -----------------------------------------------
+    // GET LOGGED-IN EMPLOYEE
+    // -----------------------------------------------
+
+    EmployeeDetails employee =
+            employeeService
+                    .getEmployeeByEmail(authentication.getName())
+                    .orElseThrow(() ->
+                            new RuntimeException(
+                                    "Employee not found"
+                            )
+                    );
+
+
+    // -----------------------------------------------
+    // CREATE ARTICLE
+    // -----------------------------------------------
+
+    Article article = new Article();
+
+    article.setArticleId(
+            UUID.randomUUID().toString()
+    );
+
+    article.setTitle(
+            form.getTitle()
+    );
+
+    article.setSlug(
+            form.getTitle()
+                    .toLowerCase()
+                    .trim()
+                    .replaceAll("[^a-z0-9]+", "-")
+                    .replaceAll("^-|-$", "")
+    );
+
+    article.setShortDescription(
+            form.getShortDescription()
+    );
+
+    article.setContent(
+            form.getContent()
+    );
+
+    // SubCategory contains Category relationship
+    article.setSubCategory(
+            subCategory
+    );
+
+    article.setAuthor(
+            employee
+    );
+
+    article.setStatus(
+            form.getStatus()
+    );
+
+    article.setPublishedAt(
+            LocalDateTime.now()
+    );
+
+    article.setUpdatedAt(
+            LocalDateTime.now()
+    );
+
+
+    // -----------------------------------------------
+    // SAVE
+    // -----------------------------------------------
+
+    articleService.saveArticle(article);
+
+
+    return "redirect:/editor/article/list";
+}
 }

@@ -1,5 +1,6 @@
 package com.springboot.scm.employeeController;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,11 +21,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.springboot.scm.employeeEntitis.EmployeeDetails;
+import com.springboot.scm.employeeEntities.EmployeeDetails;
 import com.springboot.scm.employeeServices.EmployeeService;
-import com.springboot.scm.entitis.SocialMediaUrls;
+import com.springboot.scm.entities.SocialMediaUrls;
 import com.springboot.scm.forms.EmployeeForm;
 import com.springboot.scm.forms.EmployeeSearchForm;
+import com.springboot.scm.forms.PasswordResetForm;
 import com.springboot.scm.helpers.AppConstants;
 import com.springboot.scm.helpers.EmployeeHelper;
 import com.springboot.scm.helpers.Message;
@@ -170,6 +172,7 @@ public class EmployeeController {
                     "profile_" + filename
             );
             employeeDetails.setProCloudinaryId("profile_" + filename);
+            
         }
 
         // PAN
@@ -227,6 +230,7 @@ public class EmployeeController {
                     "experience_" + filename
             );
             employeeDetails.setExpCloudinaryId("experience_" + filename);
+            employeeDetails.setExperienceLetterPdf(experienceLetterUrl);
         }
 
         // Set basic details
@@ -243,7 +247,7 @@ public class EmployeeController {
         employeeDetails.setPanPic(panUrl);
         employeeDetails.setDegreePdf(degreeUrl);
         employeeDetails.setAdharPdf(adharUrl);
-        employeeDetails.setExperienceLetterPdf(experienceLetterUrl);
+        
 
         try {
 
@@ -283,13 +287,13 @@ public class EmployeeController {
     			employeeService.getByEmployeeId(employeeId)
     	        .orElseThrow(() -> new RuntimeException("Employee not found"));
     	
-    	System.out.println("Joining Date "+employee.getJoiningDate());
+    
     	
     	employeeForm.setName(employee.getName());
     	employeeForm.setEmail(employee.getEmail());
     	employeeForm.setPhoneNumber(employee.getPhoneNumber());
-//    	employeeForm.setEnable(employee.getEnable());
-    	employeeForm.setPassword(employee.getPassword());
+
+    	
     	employeeForm.setRole(employee.getRole());
     	employeeForm.setJoiningDate(employee.getJoiningDate());
     	
@@ -301,152 +305,182 @@ public class EmployeeController {
     	
     }
     
-    @RequestMapping(value="/update/{employeeId}",method=RequestMethod.POST)
-    public String updateEmployeedetails(
-    		@Validated(UpdateGroup.class)
-    		@ModelAttribute("employee") EmployeeForm employeeForm,
-    		BindingResult bindingResult,
-    		@PathVariable("employeeId") String employeeId,
-    		HttpSession session,
-    		Model model
-    ) {
-        // Validation
-        if (bindingResult.hasErrors()) {
-			session.setAttribute("message",Message.builder()
-					.content("Please correct the following errors")
-					.type(MessageType.red)
-					.build());
+	@RequestMapping(value = "/update/{employeeId}", method = RequestMethod.POST)
+	public String updateEmployeedetails(
+			@Validated(UpdateGroup.class) @ModelAttribute("employee") EmployeeForm employeeForm,
+			BindingResult bindingResult, @PathVariable("employeeId") String employeeId, HttpSession session,
+			Model model) throws IOException {
+		// Validation
+		if (bindingResult.hasErrors()) {
+			session.setAttribute("message",
+					Message.builder().content("Please correct the following errors").type(MessageType.red).build());
 
-            return "employeeUpdate";
-        }
-        
-        // Fetch existing employee from DB
-        EmployeeDetails employeeDetails =
-                employeeService.getByEmployeeId(employeeId)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
-     // Set basic details
-        employeeDetails.setEmployeeId(employeeId);
-        employeeDetails.setName(employeeForm.getName());
-        employeeDetails.setEmail(employeeForm.getEmail());
-        
-        employeeDetails.setPhoneNumber(employeeForm.getPhoneNumber());
-        
-        employeeDetails.setRole(employeeForm.getRole());
-        
-        String filename = UUID.randomUUID().toString();
-        System.out.println("Employee password "+employeeForm.getPassword());
-        
-        if(employeeForm.getPassword() != null &&
-        		   !employeeForm.getPassword().trim().isEmpty()) {
+			return "employeeUpdate";
+		}
 
-        	  employeeDetails.setPassword(passwordEncoder.encode(employeeForm.getPassword()));
-        		}
+		// cloudinaryId
+		String filename = UUID.randomUUID().toString();
+		String proCloudinaryId = "profile_" + filename;
+		String panCloudinaryId = "pan_" + filename;
+		String banCloudinaryId = "bank_" + filename;
+		String adhCloudinaryId = "adhar_" + filename;
+		String degCloudinaryId = "degree_" + filename;
+		String expCloudinaryId = "experience_" + filename;
 
-        		if(employeeForm.getJoiningDate() != null) {
-        		    employeeDetails.setJoiningDate(employeeForm.getJoiningDate());
-        		}
+		// Fetch existing employee from DB
+		EmployeeDetails employeeDetails = employeeService.getByEmployeeId(employeeId)
+				.orElseThrow(() -> new RuntimeException("Employee not found"));
 
-        // Profile Picture
-        if (employeeForm.getProfilePic() != null
-                && !employeeForm.getProfilePic().isEmpty()) {
+		// Find all file cloudinaryId
+		// MediaType IMAGE
+		String pro = employeeDetails.getProCloudinaryId();
+		String pan = employeeDetails.getPanCloudinaryId();
+		String ban = employeeDetails.getBanCloudinaryId();
 
-           String profileUrl = imageService.uploadFile(
-                    employeeForm.getProfilePic(),
-                    "profile_" + filename
-            );
-            
-            employeeDetails.setProfilePic(profileUrl);
-        }
+		// MediaType PDF
+		String adh = employeeDetails.getAdhCloudinaryId();
+		String deg = employeeDetails.getDegCloudinaryId();
+		String exp = employeeDetails.getExpCloudinaryId();
 
-        // PAN
-        if (employeeForm.getPanPic() != null
-                && !employeeForm.getPanPic().isEmpty()) {
+		// Set basic details
+		employeeDetails.setEmployeeId(employeeId);
+		employeeDetails.setName(employeeForm.getName());
+		employeeDetails.setEmail(employeeForm.getEmail());
 
-         String   panUrl = imageService.uploadFile(
-                    employeeForm.getPanPic(),
-                    "pan_" + filename
-            );
-            
-            employeeDetails.setPanPic(panUrl);
-        }
+		employeeDetails.setPhoneNumber(employeeForm.getPhoneNumber());
 
-        // Bank Account Pic
-        if (employeeForm.getBankAccountPic() != null
-                && !employeeForm.getBankAccountPic().isEmpty()) {
+		employeeDetails.setRole(employeeForm.getRole());
 
-           String  accountUrl = imageService.uploadFile(
-                    employeeForm.getBankAccountPic(),
-                    "bank_" + filename
-            );
-            employeeDetails.setBankAccountPic(accountUrl);
-        }
+		if (employeeForm.getPassword() != null && !employeeForm.getPassword().trim().isEmpty()) {
 
-        // Aadhaar PDF
-        if (employeeForm.getAdharPdf() != null
-                && !employeeForm.getAdharPdf().isEmpty()) {
+			employeeDetails.setPassword(passwordEncoder.encode(employeeForm.getPassword()));
 
-          String  adharUrl = imageService.uploadFile(
-                    employeeForm.getAdharPdf(),
-                    "adhar_" + filename
-            );
-            
-            employeeDetails.setAdharPdf(adharUrl);
-        }
+		}
 
-        // Degree PDF
-        if (employeeForm.getDegreePdf() != null
-                && !employeeForm.getDegreePdf().isEmpty()) {
+		if (employeeForm.getJoiningDate() != null) {
+			employeeDetails.setJoiningDate(employeeForm.getJoiningDate());
+		}
 
-           String  degreeUrl = imageService.uploadFile(
-                    employeeForm.getDegreePdf(),
-                    "degree_" + filename
-            );
-            
-            employeeDetails.setDegreePdf(degreeUrl);
-        }
+		// Profile Picture
+if (employeeForm.getProfilePic() != null
+        && !employeeForm.getProfilePic().isEmpty()) {
 
-        // Experience Letter (Optional)
-        if (employeeForm.getExperienceLetterPdf() != null
-                && !employeeForm.getExperienceLetterPdf().isEmpty()) {
-
-         String   experienceLetterUrl = imageService.uploadFile(
-                    employeeForm.getExperienceLetterPdf(),
-                    "experience_" + filename
-            );
-            
-            employeeDetails.setExperienceLetterPdf(experienceLetterUrl);
-        }
-       
-        
-        
-        
-        
-       
-       
-
-        try {
-
-            EmployeeDetails savedEmployee =
-                    employeeService.updateEmployeeDetails(employeeDetails);
-
-
-            Message message = Message.builder()
-                    .content("Updated Successfully")
-                    .type(MessageType.green)
-                    .build();
-
-            session.setAttribute("message", message);
-
-            return "redirect:/hr/employeeList";
-
-        } catch (UserAlreadyExistsException e) {
-
-            model.addAttribute("employee", employeeForm);
-            model.addAttribute("error", e.getMessage());
-
-            return "employeeUpdate";
-        }
+    if (pro != null && !pro.trim().isEmpty()) {
+        imageService.deleteCloudinaryFile(pro, "image");
     }
+
+    String profileUrl =
+            imageService.uploadFile(
+                    employeeForm.getProfilePic(),
+                    proCloudinaryId
+            );
+
+    employeeDetails.setProfilePic(profileUrl);
+    employeeDetails.setProCloudinaryId(proCloudinaryId);
+}
+		// PAN
+if (employeeForm.getPanPic() != null
+        && !employeeForm.getPanPic().isEmpty()) {
+
+    if (pan != null && !pan.trim().isEmpty()) {
+        imageService.deleteCloudinaryFile(pan, "image");
+    }
+
+    String panUrl =
+            imageService.uploadFile(
+                    employeeForm.getPanPic(),
+                    panCloudinaryId
+            );
+
+    employeeDetails.setPanPic(panUrl);
+    employeeDetails.setPanCloudinaryId(panCloudinaryId);
+}
+		// Bank Account Pic
+if (employeeForm.getBankAccountPic() != null
+        && !employeeForm.getBankAccountPic().isEmpty()) {
+
+    if (ban != null && !ban.trim().isEmpty()) {
+        imageService.deleteCloudinaryFile(ban, "image");
+    }
+
+    String accountUrl =
+            imageService.uploadFile(
+                    employeeForm.getBankAccountPic(),
+                    banCloudinaryId
+            );
+
+    employeeDetails.setBankAccountPic(accountUrl);
+    employeeDetails.setBanCloudinaryId(banCloudinaryId);
+}
+		// Aadhaar PDF
+if (employeeForm.getAdharPdf() != null
+        && !employeeForm.getAdharPdf().isEmpty()) {
+
+    if (adh != null && !adh.trim().isEmpty()) {
+        imageService.deleteCloudinaryFile(adh, "PDF");
+    }
+
+    String adharUrl =
+            imageService.uploadFile(
+                    employeeForm.getAdharPdf(),
+                    adhCloudinaryId
+            );
+
+    employeeDetails.setAdharPdf(adharUrl);
+    employeeDetails.setAdhCloudinaryId(adhCloudinaryId);
+}
+		// Degree PDF
+if (employeeForm.getDegreePdf() != null
+        && !employeeForm.getDegreePdf().isEmpty()) {
+
+    if (deg != null && !deg.trim().isEmpty()) {
+        imageService.deleteCloudinaryFile(deg, "PDF");
+    }
+
+    String degreeUrl =
+            imageService.uploadFile(
+                    employeeForm.getDegreePdf(),
+                    degCloudinaryId
+            );
+
+    employeeDetails.setDegreePdf(degreeUrl);
+    employeeDetails.setDegCloudinaryId(degCloudinaryId);
+}
+		// Experience Letter (Optional)
+if (employeeForm.getExperienceLetterPdf() != null
+        && !employeeForm.getExperienceLetterPdf().isEmpty()) {
+
+    if (exp != null && !exp.trim().isEmpty()) {
+        imageService.deleteCloudinaryFile(exp, "PDF");
+    }
+
+    String experienceLetterUrl =
+            imageService.uploadFile(
+                    employeeForm.getExperienceLetterPdf(),
+                    expCloudinaryId
+            );
+
+    employeeDetails.setExperienceLetterPdf(experienceLetterUrl);
+    employeeDetails.setExpCloudinaryId(expCloudinaryId);
+}
+		try {
+
+			EmployeeDetails savedEmployee = employeeService.updateEmployeeDetails(employeeDetails);
+
+			Message message = Message.builder().content("Updated Successfully").type(MessageType.green).build();
+
+			session.setAttribute("message", message);
+
+			return "redirect:/hr/employeeList";
+
+		} catch (UserAlreadyExistsException e) {
+
+			model.addAttribute("employee", employeeForm);
+			model.addAttribute("error", e.getMessage());
+
+			return "employeeUpdate";
+		}
+	}
     
     @GetMapping("/view_employee/{employeeId}")
     public String getEmployeeWithId(@PathVariable("employeeId") String employeeId,Model model) {
@@ -461,11 +495,35 @@ public class EmployeeController {
     @GetMapping("/delete/{employeeId}")
     public String deleteEmployee(
             @PathVariable("employeeId") String employeeId,
-            HttpSession session
+            HttpSession session,
+            Model model
     ) {
+		// Fetch existing employee from DB
+		EmployeeDetails employeeDetails = employeeService.getByEmployeeId(employeeId)
+				.orElseThrow(() -> new RuntimeException("Employee not found"));
+		
+		//Find all file cloudinaryId
+		//MediaType IMAGE
+		String pro=employeeDetails.getProCloudinaryId();
+		String pan=employeeDetails.getPanCloudinaryId();
+		String ban=employeeDetails.getBanCloudinaryId();
+		
+		//MediaType PDF
+		String adh=employeeDetails.getAdhCloudinaryId();
+		String deg=employeeDetails.getDegCloudinaryId();
+		String exp=employeeDetails.getExpCloudinaryId();
+try{
+		imageService.deleteCloudinaryFile(pro, "IMAGE");
+		imageService.deleteCloudinaryFile(pan, "IMAGE");
+		imageService.deleteCloudinaryFile(ban, "IMAGE");
 
+		imageService.deleteCloudinaryFile(adh, "PDF");
+		imageService.deleteCloudinaryFile(deg, "PDF");
+		imageService.deleteCloudinaryFile(exp, "PDF");
+		
+		
         employeeService.deleteEmployeeDetails(employeeId);
-
+        
         session.setAttribute("message",
                 Message.builder()
                         .content("Employee Deleted Successfully")
@@ -473,24 +531,193 @@ public class EmployeeController {
                         .build());
 
         return "redirect:/hr/employeeList"; // or employee list page
+        
+}catch(Exception e) {
+	model.addAttribute("error", e.getMessage());
+	return "redirect:/hr/employeeList";
+}
+
     }
     
-    @GetMapping("/profile")
-    public String employeeProfile(Model model, Authentication authentication) {
+	@GetMapping("/profile")
+	public String employeeProfile(Model model, Authentication authentication) {
 
-        String email = authentication.getName();
+		String email = authentication.getName();
 
-        Optional<EmployeeDetails> employee =
-                employeeService.getEmployeeByEmail(email);
+		Optional<EmployeeDetails> employee = employeeService.getEmployeeByEmail(email);
 
-        if (employee.isPresent()) {
-            model.addAttribute("employeeProfile", employee.get());
-        } else {
-            model.addAttribute("employeeProfile", null);
-        }
+		if (employee.isPresent()) {
+			model.addAttribute("employeeProfile", employee.get());
+		} else {
+			model.addAttribute("employeeProfile", null);
+		}
 
-        return "hr/profile";
-    }
+		return "hr/profile";
+	}
     
+@RequestMapping("/password/reset/{employeeId}")
+public String updateEmployeePassword(
+        @PathVariable String employeeId,
+        Model model) {
+
+    EmployeeDetails employeeDetails =
+            employeeService
+                    .getByEmployeeId(employeeId)
+                    .orElseThrow(() ->
+                            new RuntimeException("Employee Not Found"));
+
+    PasswordResetForm passwordResetForm = new PasswordResetForm();
+
+    passwordResetForm.setEmail(employeeDetails.getEmail());
+
+    model.addAttribute("passwordResetForm", passwordResetForm);
+    model.addAttribute("employeeId", employeeId);
+
+    return "employeeFile/passwordReset";
+}
+
+@RequestMapping(value = "/password/do-reset/{employeeId}", method = RequestMethod.POST)
+public String processPasswordReset(
+
+		@Validated(UpdateGroup.class) @ModelAttribute("passwordResetForm") PasswordResetForm passwordResetForm,
+
+		BindingResult bindingResult,
+
+		@PathVariable("employeeId") String employeeId,
+
+		HttpSession session,
+
+		Model model) {
+
+	// =========================
+	// Validation
+	// =========================
+
+	if (bindingResult.hasErrors()) {
+
+		session.setAttribute("message",
+				Message.builder().content("Please correct the following errors").type(MessageType.red).build());
+
+		model.addAttribute("employeeId", employeeId);
+
+		return "employeeFile/passwordReset";
+	}
+
+	try {
+
+		// =========================
+		// Find Employee
+		// =========================
+
+		EmployeeDetails employeeDetails = employeeService.getByEmployeeId(employeeId)
+				.orElseThrow(() -> new RuntimeException("Employee Not Found"));
+
+		// =========================
+		// Get Form Values
+		// =========================
+
+		String email = passwordResetForm.getEmail();
+		String password = passwordResetForm.getPassword();
+		String confirmPassword = passwordResetForm.getConfirmPassword();
+
+		// =========================
+		// Check Email
+		// =========================
+
+		if (email == null || email.isBlank()) {
+
+			model.addAttribute("error", "Email is required.");
+
+			model.addAttribute("employeeId", employeeId);
+
+			return "employeeFile/passwordReset";
+		}
+
+		if (!employeeDetails.getEmail().equalsIgnoreCase(email.trim())) {
+
+			model.addAttribute("error", "Email does not match the employee record.");
+
+			model.addAttribute("employeeId", employeeId);
+
+			return "employeeFile/passwordReset";
+		}
+
+		// =========================
+		// Check Password
+		// =========================
+
+		if (password == null || password.isBlank()) {
+
+			model.addAttribute("error", "Password is required.");
+
+			model.addAttribute("employeeId", employeeId);
+
+			return "employeeFile/passwordReset";
+		}
+
+		// =========================
+		// Check Confirm Password
+		// =========================
+
+		if (confirmPassword == null || confirmPassword.isBlank()) {
+
+			model.addAttribute("error", "Confirm password is required.");
+
+			model.addAttribute("employeeId", employeeId);
+
+			return "employeeFile/passwordReset";
+		}
+
+		// =========================
+		// Compare Password
+		// =========================
+
+		if (!password.equals(confirmPassword)) {
+
+			model.addAttribute("error", "Password and confirm password do not match.");
+
+			model.addAttribute("employeeId", employeeId);
+
+			return "employeeFile/passwordReset";
+		}
+
+		// =========================
+		// Password Matched
+		// =========================
+
+
+
+		employeeDetails.setPassword(passwordEncoder.encode(password));
+
+		employeeService.updateEmployeeDetails(employeeDetails);
+
+		// =========================
+		// Success Message
+		// =========================
+
+		Message message = Message.builder().content("Password updated successfully").type(MessageType.green).build();
+
+		session.setAttribute("message", message);
+
+		// =========================
+		// Redirect
+		// =========================
+
+		return "redirect:/employee/password/reset/" + employeeId;
+
+	} catch (Exception e) {
+
+		e.printStackTrace();
+
+		model.addAttribute("error", e.getMessage());
+
+		model.addAttribute("passwordResetForm", passwordResetForm);
+
+		model.addAttribute("employeeId", employeeId);
+
+		return "employeeFile/passwordReset";
+	}
+}
+
 
 } 

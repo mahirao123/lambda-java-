@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
-import com.springboot.scm.entitis.Contact;
-import com.springboot.scm.entitis.User;
+import com.springboot.scm.entities.Contact;
+import com.springboot.scm.entities.User;
 
 public interface ContactService {
 	//save contact

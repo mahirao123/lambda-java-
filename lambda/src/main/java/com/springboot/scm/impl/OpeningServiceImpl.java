@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.springboot.scm.entitis.Opening;
+import com.springboot.scm.entities.Opening;
 import com.springboot.scm.repositories.OpeningRepo;
 import com.springboot.scm.services.OpeningService;
 

@@ -3,7 +3,7 @@ package com.springboot.scm.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.springboot.scm.entitis.User;
+import com.springboot.scm.entities.User;
 
 public interface UserService {
 	

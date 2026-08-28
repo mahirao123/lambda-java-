@@ -1,129 +1,113 @@
 <!DOCTYPE html>
-<html
-data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}"
-lang="en">
+<html data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}" lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title
-        data-th-text="${loggedInEmployee != null ? loggedInEmployee.name + ' | Slider' : 'Slider'}">
-        MainSlide
-    </title>
+	<title data-th-text="${loggedInEmployee != null ? loggedInEmployee.name + ' | Slider' : 'Slider'}">
+		MainSlide
+	</title>
 </head>
 
 <body>
 
-    <div id="content" class="min-h-screen flex flex-col">
+	<div id="content" class="min-h-screen flex flex-col">
 
-        <!-- Main Content -->
-		
-<main class=" px-4 sm:ml-64 transition-all duration-300">
+		<!-- Main Content -->
 
-    <h2 class="text-2xl font-bold mb-4">All Main Slide</h2>
+		<main class=" px-4 sm:ml-64 transition-all duration-300">
 
-	<a 
-	 data-th-href="@{'/editor/slider/add'}"
-	 class="">
-	    <h3 class="text-blue-500 text-2xl font-bold">Add Slide</h3>
-	    
-	</a>
-	
-    <div data-th-replace="~{message :: messagebox}"></div>
+			<h2 class="text-2xl font-bold mb-4">All Main Slide</h2>
 
-    <!-- Horizontal Scroll Container -->
-    <div class="overflow-x-auto rounded-lg shadow border">
+			<a data-th-href="@{'/editor/slider/add'}" class="">
+				<h3 class="text-blue-500 text-2xl font-bold">Add Slide</h3>
 
-        <table
-            data-th-unless="${slider.empty}"
-            class="min-w-[900px] w-full bg-white">
+			</a>
 
-            <thead>
-                <tr class="text-sm bg-gray-100 border-b">
-                    <th class="p-3 text-left">SliderType</th>
-                    <th class="p-3 text-left">About</th>
-                    <th class="p-3 text-left">Slide</th>
-                    <th class="p-3 text-center">Action</th>
-                </tr>
-            </thead>
+			<div data-th-replace="~{message :: messagebox}"></div>
 
-            <tbody>
-                <tr
-                    data-th-each="obj : ${slider}"
-                    data-th-object="${obj}"
-                    class="border-b hover:bg-gray-50 text-sm">
+			<!-- Horizontal Scroll Container -->
+			<div class="overflow-x-auto rounded-lg shadow border">
 
-                    <td class="p-3" data-th-text="*{sliderType}"></td>
-                    <td class="p-3" data-th-text="*{about}"></td>
+				<table data-th-unless="${slider.empty}" class="min-w-[900px] w-full bg-white">
 
-					<td class="p-3">
-    <a th:href="${obj.mediaUrl}" target="_blank">
-        <div
-            class="w-48 h-28 border rounded-lg bg-gray-100 flex items-center justify-center hover:bg-gray-200 overflow-hidden">
+					<thead>
+						<tr class="text-sm bg-gray-100 border-b">
+							<th class="p-3 text-left">SliderType</th>
+							<th class="p-3 text-left">About</th>
+							<th class="p-3 text-left">Slide</th>
+							<th class="p-3 text-center">Action</th>
+						</tr>
+					</thead>
 
-            <!-- Image -->
-            <img th:if="${obj.mediaType == 'IMAGE'}"
-                 th:src="${obj.mediaUrl}"
-                 class="w-full h-full object-cover rounded-lg"
-                 alt="Slide Image">
+					<tbody>
+						<tr data-th-each="obj : ${slider}" data-th-object="${obj}"
+							class="border-b hover:bg-gray-50 text-sm">
 
-            <!-- Video -->
-            <video th:if="${obj.mediaType == 'VIDEO'}"
-                   class="w-full h-full object-cover rounded-lg preview-video"
-                   autoplay
-                   muted
-                   loop
-                   playsinline
-                   onmouseenter="this.pause()"
-                   onmouseleave="this.play()">
-                <source th:src="${obj.mediaUrl}" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
+							<td class="p-3" data-th-text="*{sliderType}"></td>
+							<td class="p-3" data-th-text="*{about}"></td>
 
-        </div>
-    </a>
-</td>
+							<td class="p-3">
 
-                    <td class="p-3">
-                        <div class="flex flex-wrap gap-2 justify-center">
+								<a th:href="${obj.mediaUrl}" target="_blank">
 
-                            <a
-                                th:href="@{/editor/slider/update/{id}(id=${obj.sliderId})}"
-                                class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded text-xs sm:text-sm">
-                                Update
-                            </a>
+									<div class="relative w-48 h-28
+                    border border-gray-300 rounded-lg
+                    bg-gray-100 overflow-hidden
+                    flex items-center justify-center">
 
-                            <button
-							    th:onclick="deleteSlide([[${obj.sliderId}]])"
-                                class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded cursor-pointer text-xs sm:text-sm">
-                                Delete
-                            </button>
+										<!-- Image -->
+										<img th:if="${obj.mediaType == 'IMAGE'}" th:src="${obj.mediaUrl}"
+											alt="Slide Image" class="block w-full h-full object-cover rounded-lg">
 
-                        </div>
-                    </td>
+										<!-- Video -->
+										<video th:if="${obj.mediaType == 'VIDEO'}" th:src="${obj.mediaUrl}"
+											class="block !w-full !h-full object-cover rounded-lg" autoplay muted loop
+											playsinline onmouseenter="this.pause()" onmouseleave="this.play()">
+										</video>
 
-                </tr>
-            </tbody>
+									</div>
 
-        </table>
+								</a>
 
-    </div>
+							</td>
 
-    <h1
-        data-th-if="${slider.empty}"
-        class="text-center text-2xl sm:text-5xl bg-white p-6 mt-4">
-        No Result Found 5181590111549549, 12/32, 416
-    </h1>
+							<td class="p-3">
+								<div class="flex flex-wrap gap-2 justify-center">
 
-</main>
+									<a th:href="@{/editor/slider/update/{id}(id=${obj.sliderId})}"
+										class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded text-xs sm:text-sm">
+										Update
+									</a>
 
-    </div>
+									<button th:onclick="deleteSlide([[${obj.sliderId}]])"
+										class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded cursor-pointer text-xs sm:text-sm">
+										Delete
+									</button>
 
-    <script>
-       
-    </script>
+								</div>
+							</td>
+
+						</tr>
+					</tbody>
+
+				</table>
+
+			</div>
+
+			<h1 data-th-if="${slider.empty}" class="text-center text-2xl sm:text-5xl bg-white p-6 mt-4">
+				No Result Found 5181590111549549, 12/32, 416
+			</h1>
+
+		</main>
+
+	</div>
+
+	<script>
+
+	</script>
 
 </body>
 
-</html> 
+</html>

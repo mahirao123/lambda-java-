@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
-import com.springboot.scm.employeeEntitis.EmployeeDetails;
+import com.springboot.scm.employeeEntities.EmployeeDetails;
 
 public interface EmployeeService {
 

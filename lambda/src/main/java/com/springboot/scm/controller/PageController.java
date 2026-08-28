@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.springboot.scm.entitis.Live;
-import com.springboot.scm.entitis.Slider;
-import com.springboot.scm.entitis.SlidingText;
-import com.springboot.scm.entitis.SocialMediaUrls;
-import com.springboot.scm.entitis.User;
+import com.springboot.scm.entities.Live;
+import com.springboot.scm.entities.Slider;
+import com.springboot.scm.entities.SlidingText;
+import com.springboot.scm.entities.SocialMediaUrls;
+import com.springboot.scm.entities.User;
 import com.springboot.scm.forms.UserForm;
 import com.springboot.scm.helpers.AppConstants;
 import com.springboot.scm.helpers.Message;
@@ -119,11 +119,11 @@ public String aboutPage() {
 	
 	return"about";
 }
-@RequestMapping("/services")
+@RequestMapping("/ourAims")
 public String servicePage() {
 	
 	
-	return"services";
+	return"companyAim/ourAims";
 }
 
 @RequestMapping("/contact")

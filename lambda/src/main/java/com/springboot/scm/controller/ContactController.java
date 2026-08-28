@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.springboot.scm.entitis.Contact;
-import com.springboot.scm.entitis.User;
+import com.springboot.scm.entities.Contact;
+import com.springboot.scm.entities.User;
 import com.springboot.scm.forms.ContactForm;
 import com.springboot.scm.forms.ContactSearchForm;
 import com.springboot.scm.helpers.AppConstants;

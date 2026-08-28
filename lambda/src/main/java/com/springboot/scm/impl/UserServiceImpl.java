@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.springboot.scm.entitis.User;
+import com.springboot.scm.entities.User;
 import com.springboot.scm.helpers.AppConstants;
 import com.springboot.scm.helpers.ResourceNotFoundException;
 import com.springboot.scm.helpers.UserAlreadyExistsException;

@@ -3,7 +3,7 @@ package com.springboot.scm.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.springboot.scm.entitis.SlidingText;
+import com.springboot.scm.entities.SlidingText;
 
 public interface SlidingTextService {
 	

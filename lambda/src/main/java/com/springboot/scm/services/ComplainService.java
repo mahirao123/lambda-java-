@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.springboot.scm.entitis.Complain;
+import com.springboot.scm.entities.Complain;
 
 @Service
 public interface ComplainService {

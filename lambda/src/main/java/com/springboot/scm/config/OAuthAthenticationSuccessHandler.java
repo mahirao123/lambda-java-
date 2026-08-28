@@ -15,8 +15,8 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import com.springboot.scm.entitis.Providers;
-import com.springboot.scm.entitis.User;
+import com.springboot.scm.entities.Providers;
+import com.springboot.scm.entities.User;
 import com.springboot.scm.helpers.AppConstants;
 import com.springboot.scm.repositories.UserRepo;
 

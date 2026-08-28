@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.springboot.scm.entitis.Slider;
+import com.springboot.scm.entities.Slider;
 import com.springboot.scm.repositories.SliderRepo;
 import com.springboot.scm.services.SliderService;
 

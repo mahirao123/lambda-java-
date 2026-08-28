@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.springboot.scm.employeeEntitis.EmployeeDetails;
+import com.springboot.scm.employeeEntities.EmployeeDetails;
 import com.springboot.scm.employeeServices.EmployeeService;
-import com.springboot.scm.entitis.Complain;
-import com.springboot.scm.entitis.Opening;
-import com.springboot.scm.entitis.Podcast;
-import com.springboot.scm.entitis.Slider;
+import com.springboot.scm.entities.Complain;
+import com.springboot.scm.entities.Opening;
+import com.springboot.scm.entities.Podcast;
+import com.springboot.scm.entities.Slider;
 import com.springboot.scm.forms.ComplainForm;
 import com.springboot.scm.forms.EmployeeSearchForm;
 import com.springboot.scm.forms.OpeningForm;

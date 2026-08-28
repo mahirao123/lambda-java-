@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.springboot.scm.entitis.ServiceProviderLogin;
+import com.springboot.scm.entities.ServiceProviderLogin;
 import com.springboot.scm.repositories.ServiceProviderRepo;
 import com.springboot.scm.serviceProviderService.ProviderService;
 

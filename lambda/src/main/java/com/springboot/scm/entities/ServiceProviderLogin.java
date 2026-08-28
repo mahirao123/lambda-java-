@@ -1,4 +1,4 @@
-package com.springboot.scm.entitis;
+package com.springboot.scm.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

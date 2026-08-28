@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.springboot.scm.entitis.Complain;
+import com.springboot.scm.entities.Complain;
 import com.springboot.scm.repositories.ComplainRepo;
 import com.springboot.scm.services.ComplainService;
 

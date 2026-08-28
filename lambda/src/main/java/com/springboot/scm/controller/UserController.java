@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.springboot.scm.entitis.Contact;
-import com.springboot.scm.entitis.User;
+import com.springboot.scm.entities.Contact;
+import com.springboot.scm.entities.User;
 import com.springboot.scm.helpers.AppConstants;
 import com.springboot.scm.helpers.Helper;
 import com.springboot.scm.repositories.UserRepo;

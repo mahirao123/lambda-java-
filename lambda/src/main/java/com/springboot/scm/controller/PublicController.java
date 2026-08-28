@@ -11,8 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.springboot.scm.entitis.Podcast;
-import com.springboot.scm.entitis.SocialMediaUrls;
+import com.springboot.scm.entities.Podcast;
+import com.springboot.scm.entities.SocialMediaUrls;
 import com.springboot.scm.helpers.AppConstants;
 import com.springboot.scm.services.ComplainService;
 import com.springboot.scm.services.OpeningService;

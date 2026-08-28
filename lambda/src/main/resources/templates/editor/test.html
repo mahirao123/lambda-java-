@@ -1,99 +1,376 @@
-<table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
 
-    <!-- Table Header -->
-    <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-        <tr>
-            <th scope="col" class="px-6 py-3">
-                #
-            </th>
+<!-- Header -->
 
-            <th scope="col" class="px-6 py-3">
-                Sliding Text
-            </th>
+<div class="flex flex-col md:flex-row
+            md:items-center md:justify-between
+            gap-4 mb-8">
 
-            <th scope="col" class="px-6 py-3">
-                URL
-            </th>
+    <div>
 
-            <th scope="col" class="px-6 py-3 text-center">
-                Actions
-            </th>
-        </tr>
-    </thead>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+            Content Categories
+        </h1>
 
-    <!-- Table Body -->
-    <tbody>
+        <p class="mt-1 text-gray-500 dark:text-gray-400">
+            Manage categories and subcategories for your media content.
+        </p>
 
-        <tr th:each="slidingText, stat : ${slidingText}"
-            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+    </div>
 
-            <!-- ID / Serial Number -->
-            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                <span th:text="${stat.count}">1</span>
-            </td>
+    <button
+        type="button"
+        onclick="openCategoryModal()"
+        class="px-5 py-3 text-white bg-blue-600
+               hover:bg-blue-700 rounded-lg
+               font-medium">
 
-            <!-- Text -->
-            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                <span th:text="${slidingText.text}">
-                    Sample sliding text
-                </span>
-            </td>
+        + Add Category
 
-            <!-- URL -->
-            <td class="px-6 py-4">
+    </button>
 
-                <a th:if="${slidingText.url != null and !#strings.isEmpty(slidingText.url)}"
-                   th:href="${slidingText.url}"
-                   target="_blank"
-                   class="text-blue-600 hover:underline break-all"
-                   th:text="${slidingText.url}">
-                    https://example.com
-                </a>
+</div>
 
-                <span th:unless="${slidingText.url != null and !#strings.isEmpty(slidingText.url)}"
-                      class="text-gray-400">
-                    No URL
-                </span>
 
-            </td>
+<!-- Category Cards -->
 
-            <!-- Actions -->
-            <td class="px-6 py-4">
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3
+            gap-6">
 
-                <div class="flex items-center justify-center gap-2">
+    <div th:each="category : ${categories}"
+         class="bg-white dark:bg-gray-800
+                border border-gray-200 dark:border-gray-700
+                rounded-xl shadow-sm
+                overflow-hidden">
 
-                    <!-- Update Button -->
-                    <a th:href="@{'/admin/sliding-text/edit/' + ${slidingText.id}}"
-                       class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300">
+        <!-- Category Header -->
 
-                        <i class="fa-solid fa-pen-to-square"></i>
+        <div class="p-5
+                    bg-gray-50 dark:bg-gray-900
+                    border-b border-gray-200
+                    dark:border-gray-700">
 
-                        Update
-                    </a>
+            <div class="flex items-center justify-between">
 
-                    <!-- Delete Button -->
-                    <a th:href="@{'/admin/sliding-text/delete/' + ${slidingText.id}}"
-                       onclick="return confirm('Are you sure you want to delete this sliding text?');"
-                       class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-300">
+                <div>
 
-                        <i class="fa-solid fa-trash"></i>
+                    <h2 class="text-xl font-bold
+                               text-gray-900 dark:text-white"
+                        th:text="${category.name}">
+                        Education
+                    </h2>
 
-                        Delete
-                    </a>
+                    <p class="text-sm text-gray-500 mt-1">
+
+                        <span th:text="${category.subCategories.size()}">
+                            5
+                        </span>
+
+                        Subcategories
+
+                    </p>
 
                 </div>
 
-            </td>
+                <a th:href="@{'/editor/category/delete/' + ${category.id}}"
+                   onclick="return confirm('Delete this category and all its subcategories?')"
+                   class="text-red-500 hover:text-red-700">
 
-        </tr>
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="w-5 h-5"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke="currentColor">
+
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3m-9 0h12"/>
+
+                    </svg>
+
+                </a>
+
+            </div>
+
+        </div>
 
 
+        <!-- Subcategories -->
 
-    </tbody>
+        <div class="p-5">
 
-</table>
-<h1
-    data-th-if="${slidingText.empty}"
-    class="text-center text-2xl sm:text-5xl bg-white p-6 mt-4">
-    No Result Found
-</h1>
+            <div th:if="${#lists.isEmpty(category.subCategories)}"
+                 class="text-center py-6">
+
+                <p class="text-gray-500">
+                    No subcategories added.
+                </p>
+
+            </div>
+
+
+            <ul th:unless="${#lists.isEmpty(category.subCategories)}"
+                class="space-y-2">
+
+                <li th:each="sub : ${category.subCategories}"
+                    class="flex items-center gap-3
+                           p-3 rounded-lg
+                           bg-gray-50 dark:bg-gray-700">
+
+                    <span class="w-2 h-2 rounded-full
+                                 bg-blue-600">
+                    </span>
+
+                    <span class="text-gray-800
+                                 dark:text-gray-200"
+                          th:text="${sub.name}">
+                        School Education
+                    </span>
+
+                </li>
+
+            </ul>
+
+
+            <!-- Add Subcategory -->
+
+            <button
+                type="button"
+                th:attr="data-category-id=${category.id},
+                         data-category-name=${category.name}"
+                onclick="openSubCategoryModal(this)"
+                class="w-full mt-5 px-4 py-2
+                       text-sm font-medium
+                       text-blue-600
+                       border border-blue-600
+                       rounded-lg
+                       hover:bg-blue-50
+                       dark:hover:bg-gray-700">
+
+                + Add Subcategory
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Empty State -->
+
+<div th:if="${#lists.isEmpty(categories)}"
+     class="text-center py-20">
+
+    <div class="text-6xl mb-4">
+        📂
+    </div>
+
+    <h2 class="text-2xl font-bold
+               text-gray-800 dark:text-white">
+
+        No Categories Yet
+
+    </h2>
+
+    <p class="text-gray-500 mt-2">
+        Start by creating your first content category.
+    </p>
+
+</div>
+
+
+<!-- Category Modal -->
+
+<div id="categoryModal"
+     class="hidden fixed inset-0 z-50
+            flex items-center justify-center
+            bg-black/50">
+
+    <div class="bg-white dark:bg-gray-800
+                rounded-xl shadow-xl
+                w-full max-w-md p-6">
+
+        <div class="flex justify-between items-center mb-5">
+
+            <h2 class="text-xl font-bold
+                       text-gray-900 dark:text-white">
+
+                Add Category
+
+            </h2>
+
+            <button
+                type="button"
+                onclick="closeCategoryModal()"
+                class="text-gray-500 hover:text-gray-800
+                       text-2xl">
+
+                &times;
+
+            </button>
+
+        </div>
+
+
+        <form th:action="@{/editor/category/add}"
+              method="post">
+
+            <label class="block mb-2 font-medium
+                          text-gray-700 dark:text-gray-300">
+
+                Category Name
+
+            </label>
+
+            <input
+                type="text"
+                name="name"
+                required
+                placeholder="Example: Education"
+                class="w-full px-4 py-3
+                       border border-gray-300
+                       rounded-lg
+                       focus:ring-2
+                       focus:ring-blue-500
+                       dark:bg-gray-700
+                       dark:border-gray-600
+                       dark:text-white">
+
+            <div class="flex justify-end gap-3 mt-6">
+
+                <button
+                    type="button"
+                    onclick="closeCategoryModal()"
+                    class="px-4 py-2
+                           bg-gray-200
+                           rounded-lg">
+
+                    Cancel
+
+                </button>
+
+                <button
+                    type="submit"
+                    class="px-5 py-2
+                           text-white
+                           bg-blue-600
+                           rounded-lg
+                           hover:bg-blue-700">
+
+                    Save Category
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- Subcategory Modal -->
+
+<div id="subCategoryModal"
+     class="hidden fixed inset-0 z-50
+            flex items-center justify-center
+            bg-black/50">
+
+    <div class="bg-white dark:bg-gray-800
+                rounded-xl shadow-xl
+                w-full max-w-md p-6">
+
+        <div class="flex justify-between items-center mb-5">
+
+            <div>
+
+                <h2 class="text-xl font-bold
+                           text-gray-900 dark:text-white">
+
+                    Add Subcategory
+
+                </h2>
+
+                <p id="selectedCategory"
+                   class="text-sm text-gray-500 mt-1">
+                </p>
+
+            </div>
+
+            <button
+                type="button"
+                onclick="closeSubCategoryModal()"
+                class="text-gray-500 text-2xl">
+
+                &times
+
+            </button>
+
+        </div>
+
+
+        <form th:action="@{/editor/category/subcategory/add}"
+              method="post">
+
+            <input
+                type="hidden"
+                name="categoryId"
+                id="categoryId">
+
+
+            <label class="block mb-2 font-medium
+                          text-gray-700 dark:text-gray-300">
+
+                Subcategory Name
+
+            </label>
+
+            <input
+                type="text"
+                name="name"
+                required
+                placeholder="Example: School Education"
+                class="w-full px-4 py-3
+                       border border-gray-300
+                       rounded-lg
+                       focus:ring-2
+                       focus:ring-blue-500
+                       dark:bg-gray-700
+                       dark:border-gray-600
+                       dark:text-white">
+
+
+            <div class="flex justify-end gap-3 mt-6">
+
+                <button
+                    type="button"
+                    onclick="closeSubCategoryModal()"
+                    class="px-4 py-2
+                           bg-gray-200
+                           rounded-lg">
+
+                    Cancel
+
+                </button>
+
+                <button
+                    type="submit"
+                    class="px-5 py-2
+                           text-white
+                           bg-blue-600
+                           rounded-lg">
+
+                    Add Subcategory
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

@@ -1,93 +1,133 @@
 <!DOCTYPE html>
-<html 
-data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}"
-lang="en">
+
+<html
+    data-th-replace="~{base :: parent(~{:: #content},~{::title},~{::script})}"
+    lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>login</title>
 
 </head>
-<body >
 
-  <div id="content">
+<body>
+
+<div id="content">
+
     <div class="grid grid-cols-12 mt-4">
 
-      <div class="col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4"></div>
-      <div class="col-span-10 md:col-span-8 lg:col-span-6 xl:col-span-4 border-t-8 border-green-700 rounded-2xl bg-white">
-      <h2 class="text-3xl font-bold mb-6 text-center text-gray-700">Login</h2>
-	<div data-th-replace="~{message::messagebox}"></div>
+        <div class="col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4"></div>
 
-	<div class="text-red-600 text-center my-3" data-th-if="${param.error}">
-		Invalid Username or Password!
-	</div>
+        <div class="col-span-10 md:col-span-8 lg:col-span-6 xl:col-span-4 border-t-8 border-green-700 rounded-2xl bg-white">
 
-		<div class="text-green-600 text-center my-3" data-th-if="${param.logout}">
-		Logout Successful!
-	</div>
+            <h2 class="text-3xl font-bold mb-6 text-center text-gray-700">
+                Login
+            </h2>
 
-    <form 
-	method="post"
-	data-th-action="@{/employee/authenticate}"
-	
-	class="space-y-5" >
+            <div data-th-replace="~{message::messagebox}"></div>
 
-      <!-- Email -->
-      <div>
-        <label for="email" class="block mb-2 text-sm font-medium text-gray-700">Email Address</label>
-        <input type="email" id="email" name="email"
-          placeholder="example@firm.com"
-          
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+            <div class="text-red-600 text-center my-3" data-th-if="${param.error}">
+                Invalid Username or Password!
+            </div>
 
-		    <!-- <p 
-		    data-th-if="${#fields.hasErrors('email')}"
-		    data-th-errors="*{email}"
-		    class="text-red-600 px-1 py-2"
-		    >
-		  </p> -->
+            <div class="text-green-600 text-center my-3" data-th-if="${param.logout}">
+                Logout Successful!
+            </div>
 
-		  </div>
+            <form
+                method="post"
+                data-th-action="@{/employee/authenticate}"
+                class="space-y-5">
 
-      <!-- Password -->
-      <div>
-        <label for="password" class="block mb-2 text-sm font-medium text-gray-700">Password</label>
-        <input type="password" id="password" name="password"
-          placeholder="Create a password"
-          
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                <!-- Email -->
+                <div>
 
-		    <!-- <p 
-		    data-th-if="${#fields.hasErrors('password')}"
-		    data-th-errors="*{password}"
-		    class="text-red-600 px-1 py-2"
-		    >
-		  </p> -->
+                    <label for="email"
+                           class="block mb-2 text-sm font-medium text-gray-700">
+                        Email Address
+                    </label>
 
-		  </div>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="example@firm.com"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+                               focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
 
-      <!-- Submit Button -->
-      <div class="flex justify-center space-x-2">
-        <button type="submit"
-          class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-          Login
+                </div>
+
+
+<!-- Password -->
+<div>
+
+    <label for="password"
+           class="block mb-2 text-sm font-medium text-gray-700">
+        Password
+    </label>
+
+    <div class="relative">
+
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm
+                   rounded-lg focus:ring-blue-500 focus:border-blue-500
+                   block w-full p-2.5 pr-12" />
+
+        <!-- Eye Toggle Button -->
+        <button
+            type="button"
+            id="togglePassword"
+            class="absolute right-0 top-0 h-full px-3
+                   text-gray-500 hover:text-gray-700
+                   focus:outline-none"
+            aria-label="Show password">
+
+            <i id="passwordEye" class="fa-solid fa-eye"></i>
+
         </button>
 
-          <button type="reset"
-          class="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-          Reset
-        </button>
-
-      </div>
-    </form>
-
-
-
-      </div>
     </div>
-    
-  </div>
 
-  <script></script>
+</div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-center space-x-2">
+
+                    <button
+                        type="submit"
+                        class="text-white bg-blue-600 hover:bg-blue-700
+                               focus:ring-4 focus:outline-none focus:ring-blue-300
+                               font-medium rounded-lg text-sm px-6 py-2.5 text-center
+                               dark:bg-blue-600 dark:hover:bg-blue-700
+                               dark:focus:ring-blue-800">
+
+                        Login
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+</script>
+
 </body>
+
 </html>

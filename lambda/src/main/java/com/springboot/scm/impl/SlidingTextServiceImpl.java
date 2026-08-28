@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.springboot.scm.entitis.SlidingText;
+import com.springboot.scm.entities.SlidingText;
 import com.springboot.scm.repositories.SlidingTextRepo;
 import com.springboot.scm.services.SlidingTextService;
 

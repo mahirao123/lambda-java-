@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.springboot.scm.entitis.Contact;
-import com.springboot.scm.entitis.User;
+import com.springboot.scm.entities.Contact;
+import com.springboot.scm.entities.User;
 
 @Repository
 public interface ContactRepo extends JpaRepository<Contact,String>{

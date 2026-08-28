@@ -1,7 +1,6 @@
 package com.springboot.scm.impl;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -22,98 +21,198 @@ public class ImageServiceImpl implements ImageService {
         this.cloudinary = cloudinary;
     }
 
+    // ============================================================
+    // UPLOAD FILE
+    // ============================================================
+
     @Override
     public String uploadFile(MultipartFile file, String filename) {
 
         try {
 
-            // File validation
+            // ----------------------------------------------------
+            // Validate file
+            // ----------------------------------------------------
+
             if (file == null || file.isEmpty()) {
                 return null;
             }
 
-            // Get original filename
+            // ----------------------------------------------------
+            // Validate filename
+            // ----------------------------------------------------
+
+            if (filename == null || filename.isBlank()) {
+                return null;
+            }
+
+            // ----------------------------------------------------
+            // Get original extension
+            // ----------------------------------------------------
+
             String originalFilename = file.getOriginalFilename();
+
             String extension = "";
 
             if (originalFilename != null
                     && originalFilename.contains(".")) {
 
-                extension = originalFilename.substring(
-                        originalFilename.lastIndexOf(".") + 1
-                ).toLowerCase();
+                extension = originalFilename
+                        .substring(originalFilename.lastIndexOf(".") + 1)
+                        .toLowerCase();
             }
 
+            // ----------------------------------------------------
+            // Remove extension from public ID
+            //
+            // IMPORTANT:
+            // Image/video public_id should NOT contain extension.
+            // Raw public_id SHOULD contain extension.
+            // ----------------------------------------------------
+
+            String publicId = filename;
+
+            if (publicId.contains(".")) {
+
+                publicId = publicId.substring(
+                        0,
+                        publicId.lastIndexOf(".")
+                );
+            }
+
+            // ----------------------------------------------------
             // Detect resource type
+            // ----------------------------------------------------
+
             String resourceType = "image";
 
-            // Video files
-            if (extension.equals("mp4")
-                    || extension.equals("avi")
-                    || extension.equals("mov")
-                    || extension.equals("mkv")) {
+            if (isVideo(extension)) {
 
                 resourceType = "video";
-            }
 
-            // PDF files
-            else if (extension.equals("pdf")) {
+            } else if ("pdf".equalsIgnoreCase(extension)) {
+
+                /*
+                 * We are intentionally storing PDF as RAW.
+                 *
+                 * For raw resources Cloudinary requires the
+                 * extension to be part of the public_id.
+                 */
 
                 resourceType = "raw";
+
+                publicId = publicId + ".pdf";
             }
 
-            // Upload file to Cloudinary
-            Map uploadResult = cloudinary.uploader().upload(
-                    file.getBytes(),
-                    ObjectUtils.asMap(
-                            "public_id", filename,
-                            "resource_type", resourceType,
-                            "overwrite", true,
-                            "format", extension // preserve extension
-                    )
-            );
+            // ----------------------------------------------------
+            // Upload options
+            // ----------------------------------------------------
 
-            String fileUrl;
+            Map<String, Object> options;
 
-            // PDF direct open URL
-            if ("pdf".equals(extension)) {
+            if ("raw".equals(resourceType)) {
 
-                fileUrl = cloudinary.url()
-                        .secure(true)
-                        .resourceType("raw")
-                        .generate(filename + ".pdf");
+                options = ObjectUtils.asMap(
+                        "public_id", publicId,
+                        "resource_type", "raw",
+                        "overwrite", true
+                );
+
+            } else {
+
+                options = ObjectUtils.asMap(
+                        "public_id", publicId,
+                        "resource_type", resourceType,
+                        "overwrite", true
+                );
             }
 
-            // Image / Video URL
-            else {
+            // ----------------------------------------------------
+            // Upload
+            // ----------------------------------------------------
 
-                fileUrl = uploadResult
-                        .get("secure_url")
-                        .toString();
+            Map<String, Object> uploadResult =
+                    cloudinary.uploader().upload(
+                            file.getBytes(),
+                            options
+                    );
+
+            // ----------------------------------------------------
+            // Get secure URL directly from Cloudinary
+            // ----------------------------------------------------
+
+            Object secureUrl = uploadResult.get("secure_url");
+
+            if (secureUrl == null) {
+
+                System.out.println(
+                        "Cloudinary upload succeeded but secure_url is null"
+                );
+
+                return null;
             }
 
-            System.out.println("Uploaded URL : " + fileUrl);
+            String fileUrl = secureUrl.toString();
+
+            System.out.println("------------------------------------");
+            System.out.println("Cloudinary Upload Successful");
+            System.out.println("Public ID     : " + uploadResult.get("public_id"));
+            System.out.println("Resource Type : " + uploadResult.get("resource_type"));
+            System.out.println("Format        : " + uploadResult.get("format"));
+            System.out.println("Secure URL    : " + fileUrl);
+            System.out.println("------------------------------------");
 
             return fileUrl;
 
         } catch (IOException e) {
 
             e.printStackTrace();
+
             return null;
         }
     }
 
-    // Generate transformed URL using public ID
+    // ============================================================
+    // CHECK VIDEO EXTENSION
+    // ============================================================
+
+    private boolean isVideo(String extension) {
+
+        return "mp4".equalsIgnoreCase(extension)
+                || "avi".equalsIgnoreCase(extension)
+                || "mov".equalsIgnoreCase(extension)
+                || "mkv".equalsIgnoreCase(extension)
+                || "webm".equalsIgnoreCase(extension)
+                || "flv".equalsIgnoreCase(extension)
+                || "wmv".equalsIgnoreCase(extension);
+    }
+
+    // ============================================================
+    // GET URL FROM PUBLIC ID + RESOURCE TYPE
+    // ============================================================
+
+    
     public String getUrlFromPublicId(
             String publicId,
-            String resourceType
-    ) {
+            String resourceType) {
 
-        // Image with transformation
-        if ("image".equals(resourceType)) {
+        if (publicId == null || publicId.isBlank()) {
+            return null;
+        }
+
+        if (resourceType == null || resourceType.isBlank()) {
+            resourceType = "image";
+        }
+
+        // --------------------------------------------------------
+        // IMAGE
+        // --------------------------------------------------------
+
+        if ("image".equalsIgnoreCase(resourceType)) {
 
             return cloudinary.url()
                     .secure(true)
+                    .resourceType("image")
                     .transformation(
                             new Transformation<>()
                                     .width(AppConstants.CONTACT_IMAGE_WIDTH)
@@ -123,11 +222,18 @@ public class ImageServiceImpl implements ImageService {
                     .generate(publicId);
         }
 
-        // PDF direct browser view
-        if ("raw".equals(resourceType)) {
+        // --------------------------------------------------------
+        // RAW / PDF
+        // --------------------------------------------------------
 
-            // avoid duplicate .pdf
-            if (!publicId.endsWith(".pdf")) {
+        if ("raw".equalsIgnoreCase(resourceType)) {
+
+            /*
+             * Raw public ID must contain the extension.
+             */
+
+            if (!publicId.toLowerCase().endsWith(".pdf")) {
+
                 publicId = publicId + ".pdf";
             }
 
@@ -137,64 +243,138 @@ public class ImageServiceImpl implements ImageService {
                     .generate(publicId);
         }
 
-        // Video URL
-        return cloudinary.url()
-                .secure(true)
-                .resourceType(resourceType)
-                .generate(publicId);
+        // --------------------------------------------------------
+        // VIDEO
+        // --------------------------------------------------------
+
+        if ("video".equalsIgnoreCase(resourceType)) {
+
+            return cloudinary.url()
+                    .secure(true)
+                    .resourceType("video")
+                    .generate(publicId);
+        }
+
+        throw new IllegalArgumentException(
+                "Unsupported Cloudinary resource type: "
+                        + resourceType
+        );
     }
+
+    // ============================================================
+    // GET URL FROM PUBLIC ID
+    // DEFAULT = IMAGE
+    // ============================================================
 
     @Override
     public String getUrlFromPublicId(String publicId) {
 
-        // Handle PDF automatically
-        if (publicId != null
-                && publicId.toLowerCase().endsWith(".pdf")) {
-
-            return cloudinary.url()
-                    .secure(true)
-                    .resourceType("raw")
-                    .generate(publicId);
+        if (publicId == null || publicId.isBlank()) {
+            return null;
         }
 
-        // Default image URL
+        /*
+         * This method cannot reliably determine whether a public ID
+         * belongs to image, video, or raw just from the public ID.
+         *
+         * Therefore image is the default.
+         */
+
         return cloudinary.url()
                 .secure(true)
+                .resourceType("image")
                 .generate(publicId);
     }
 
-	@Override
-	public void deleteCloudinaryFile(String cloudinaryId, String mediaType)  throws IOException{
-		
-		Map<String, Object> options = new HashMap<>();
+    // ============================================================
+    // DELETE CLOUDINARY FILE
+    // ============================================================
 
-		if ("VIDEO".equalsIgnoreCase(mediaType)) {
+    @Override
+    public void deleteCloudinaryFile(
+            String cloudinaryId,
+            String mediaType) throws IOException {
 
-		    options.put("resource_type", "video");
-		    options.put("invalidate", true);
+        // --------------------------------------------------------
+        // Validate public ID
+        // --------------------------------------------------------
 
-		} else if ("PDF".equalsIgnoreCase(mediaType)) {
+        if (cloudinaryId == null || cloudinaryId.isBlank()) {
+            return;
+        }
 
-		    // PDF and other documents should be uploaded as raw
-		    options.put("resource_type", "raw");
-		    options.put("invalidate", true);
+        // --------------------------------------------------------
+        // Validate media type
+        // --------------------------------------------------------
 
-		} else if ("IMAGE".equalsIgnoreCase(mediaType)) {
+        if (mediaType == null || mediaType.isBlank()) {
 
-		    options.put("resource_type", "image");
-		    options.put("invalidate", true);
+            throw new IllegalArgumentException(
+                    "Media type cannot be null or empty"
+            );
+        }
 
-		} else {
+        // --------------------------------------------------------
+        // Determine Cloudinary resource type
+        // --------------------------------------------------------
 
-		    // Default resource type
-		    options.put("resource_type", "auto");
-		    options.put("invalidate", true);
-		    
-		}
-		
-		Map result=cloudinary.uploader().destroy(cloudinaryId, options);
-		System.out.println("delete from clodinary  "+result);
-	}
-    
-    
+        String resourceType;
+
+        if ("VIDEO".equalsIgnoreCase(mediaType)) {
+
+            resourceType = "video";
+
+        } else if ("PDF".equalsIgnoreCase(mediaType)) {
+
+            resourceType = "raw";
+
+        } else if ("IMAGE".equalsIgnoreCase(mediaType)) {
+
+            resourceType = "image";
+
+        } else {
+
+            throw new IllegalArgumentException(
+                    "Unsupported media type: " + mediaType
+                            + ". Allowed values: IMAGE, VIDEO, PDF"
+            );
+        }
+
+        // --------------------------------------------------------
+        // For raw PDF:
+        // public ID must contain .pdf
+        // --------------------------------------------------------
+
+        if ("raw".equals(resourceType)
+                && !cloudinaryId.toLowerCase().endsWith(".pdf")) {
+
+            cloudinaryId = cloudinaryId + ".pdf";
+        }
+
+        // --------------------------------------------------------
+        // Delete options
+        // --------------------------------------------------------
+
+        Map<String, Object> options = ObjectUtils.asMap(
+                "resource_type", resourceType,
+                "invalidate", true
+        );
+
+        // --------------------------------------------------------
+        // Delete from Cloudinary
+        // --------------------------------------------------------
+
+        Map<String, Object> result =
+                cloudinary.uploader().destroy(
+                        cloudinaryId,
+                        options
+                );
+
+        System.out.println("------------------------------------");
+        System.out.println("Cloudinary Delete");
+        System.out.println("Public ID     : " + cloudinaryId);
+        System.out.println("Resource Type : " + resourceType);
+        System.out.println("Result        : " + result);
+        System.out.println("------------------------------------");
+    }
 }

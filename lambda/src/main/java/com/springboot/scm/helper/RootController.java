@@ -5,9 +5,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import com.springboot.scm.employeeEntitis.EmployeeDetails;
+import com.springboot.scm.employeeEntities.EmployeeDetails;
 import com.springboot.scm.employeeRepositories.EmployeeRepo;
-import com.springboot.scm.entitis.User;
+import com.springboot.scm.entities.User;
 import com.springboot.scm.repositories.UserRepo;
 
 @ControllerAdvice

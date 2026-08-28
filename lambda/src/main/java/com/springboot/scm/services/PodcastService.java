@@ -7,7 +7,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
-import com.springboot.scm.entitis.Podcast;
+import com.springboot.scm.entities.Podcast;
 
 public interface PodcastService {
 	

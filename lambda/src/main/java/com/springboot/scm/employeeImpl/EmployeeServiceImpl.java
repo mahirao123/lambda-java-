@@ -1,9 +1,10 @@
 package com.springboot.scm.employeeImpl;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-
+import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,7 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.springboot.scm.employeeEntitis.EmployeeDetails;
+import com.springboot.scm.employeeEntities.EmployeeDetails;
 import com.springboot.scm.employeeRepositories.EmployeeRepo;
 import com.springboot.scm.employeeServices.EmployeeService;
 import com.springboot.scm.helpers.UserAlreadyExistsException;
@@ -27,20 +28,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 	@Override
 	public EmployeeDetails saveEmployeeDetails(EmployeeDetails employeeDetails) {
-		
-
-		String employeeId=UUID.randomUUID().toString();
+//Set EmployeeId
+		String employeeId = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMMdd")).toUpperCase()
+				+ new Random().ints(4, 'A', 'Z' + 1)
+						.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
 		employeeDetails.setEmployeeId(employeeId);
-		//Encode password
-		employeeDetails.setPassword(passwordEncoder.encode(employeeDetails.getPassword()));
-        // Check email already exists
 		
-	   Optional  <EmployeeDetails> existEmployee=	employeeRepo.findByEmail(employeeDetails.getEmail());
-			
-		if(existEmployee.isPresent()) {
+		// Encode password
+		employeeDetails.setPassword(passwordEncoder.encode(employeeDetails.getPassword()));
+		
+		// Check email already exists
+
+		Optional<EmployeeDetails> existEmployee = employeeRepo.findByEmail(employeeDetails.getEmail());
+
+		if (existEmployee.isPresent()) {
 			throw new UserAlreadyExistsException("This email is already registered: ");
 		}
-
 
 		return employeeRepo.save(employeeDetails);
 	}
@@ -48,7 +51,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public EmployeeDetails updateEmployeeDetails(EmployeeDetails employeeDetails) {
 		
-		
+		//Encode password
+
 		return employeeRepo.save(employeeDetails);
 	}
 

@@ -1,13 +1,15 @@
-package com.springboot.scm.entitis;
+package com.springboot.scm.entities;
 
 import java.time.LocalDateTime;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.springboot.scm.employeeEntitis.EmployeeDetails;
+import com.springboot.scm.employeeEntities.EmployeeDetails;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,18 +50,11 @@ public class SocialMediaUrls {
 	
 	private LocalDateTime dateTime;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "employeeId", nullable = true)
 	private EmployeeDetails employee;
 
-	
-//	public String getEmbedUrl() {
-//	    if (youtubeLink == null) return "";
-//
-//	    if (youtubeLink.contains("watch?v=")) {
-//	        String id = youtubeLink.substring(youtubeLink.indexOf("watch?v=") + 8);
-//	        return "https://www.youtube.com/embed/" + id;
-//	    }
-//
-//	    return youtubeLink;
-//	}
+	private String postedBy;
+
+
 }

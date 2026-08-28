@@ -1,4 +1,4 @@
-package com.springboot.scm.entitis;
+package com.springboot.scm.entities;
 
 import java.sql.Date;
 import java.time.LocalTime;

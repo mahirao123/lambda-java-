@@ -52,23 +52,41 @@ lang="en">
 
 		  </div>
 
-      <!-- Password -->
-      <div>
-        <label for="password" class="block mb-2 text-sm font-medium text-gray-700">Password</label>
-        <input type="password" id="password" name="password"
-          placeholder="Create a password"
-          
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+<!-- Password -->
+<div>
 
-		    <!-- <p 
-		    data-th-if="${#fields.hasErrors('password')}"
-		    data-th-errors="*{password}"
-		    class="text-red-600 px-1 py-2"
-		    >
-		  </p> -->
+    <label for="password"
+           class="block mb-2 text-sm font-medium text-gray-700">
+        Password
+    </label>
 
-		  </div>
+    <div class="relative">
 
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm
+                   rounded-lg focus:ring-blue-500 focus:border-blue-500
+                   block w-full p-2.5 pr-12" />
+
+        <!-- Eye Toggle Button -->
+        <button
+            type="button"
+            id="togglePassword"
+            class="absolute right-0 top-0 h-full px-3
+                   text-gray-500 hover:text-gray-700
+                   focus:outline-none"
+            aria-label="Show password">
+
+            <i id="passwordEye" class="fa-solid fa-eye"></i>
+
+        </button>
+
+    </div>
+
+</div>
       <!-- Submit Button -->
       <div class="flex justify-center space-x-2">
         <button type="submit"
